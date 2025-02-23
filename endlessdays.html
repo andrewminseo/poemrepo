@@ -146,6 +146,45 @@
         #alarmSound {
             display: none;
         }
+    .next-nav {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .next-nav.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .next-button {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            text-decoration: none;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .next-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .next-button:hover::after {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -201,9 +240,13 @@
             <div class="line" data-effect="tremble">now tremble under the thought—</div>
         </div>
         <div class="section">
-            <div class="line" data-effect="question"><em>is this all there is?</em></div>
+            <div class="line" data-effect="question"><em>is this all there is?</em>            </div>
         </div>
     </div>
+
+    <nav class="next-nav">
+        <a href="dissolution.html" class="next-button">dissolution</a>
+    </nav>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -376,6 +419,46 @@
 
             // Initialize animations
             updateClock();
+
+            // Navigation visibility
+            ScrollTrigger.create({
+                trigger: ".container",
+                start: "top top",
+                end: "bottom bottom",
+                onUpdate: (self) => {
+                    if (self.progress > 0.95) {
+                        document.querySelector('.next-nav').classList.add('visible');
+                    } else {
+                        document.querySelector('.next-nav').classList.remove('visible');
+                    }
+                }
+            });
+
+            // Next button handler
+            document.querySelector('.next-button').addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                
+                // Final overwhelming moment before transition
+                gsap.to('.alarm-overlay', {
+                    opacity: 1,
+                    duration: 0.5
+                });
+                
+                gsap.to('.trembling-overlay', {
+                    opacity: 0.5,
+                    duration: 0.5
+                });
+                
+                gsap.to('body', {
+                    opacity: 0,
+                    duration: 1,
+                    delay: 0.5,
+                    onComplete: () => {
+                        window.location.href = href;
+                    }
+                });
+            });
         });
     </script>
 </body>
