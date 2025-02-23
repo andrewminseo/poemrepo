@@ -3,56 +3,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neat</title>
+    <title>Spark</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #1a1a1a;
-            color: white;
-            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            font-family: 'Times New Roman', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .container {
+            min-height: 500vh;
+            position: relative;
+        }
+
+        .title-container {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .title {
+            font-size: 4rem;
+            opacity: 0;
+            letter-spacing: 1rem;
+        }
+
+        .poem {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 800px;
+            padding: 2rem;
+            padding-top: 40vh;
+        }
+
+        .line {
+            opacity: 0;
+            transform: translateY(20px);
+            margin-bottom: 35vh;
+            font-size: 1.8rem;
+            line-height: 1.6;
+            position: relative;
+            text-align: center;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .spark {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .what-if {
+            font-style: italic;
+            font-size: 2.5rem;
+        }
+
+        .what-if-container {
+            height: 50vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            text-align: center;
-            padding: 20px;
         }
-        .poem {
-            max-width: 600px;
-            font-size: 1.5rem;
-            line-height: 1.6;
-        }
-        .floating {
+
+        .ripple {
             position: absolute;
-            font-size: 1.2rem;
-            opacity: 0.7;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
         }
+
+        .wanting-effect {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            transform-origin: left;
+            bottom: -10px;
+            left: 0;
+        }
+
+        .hands-reach {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-nav {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .next-nav.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .next-button {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .next-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .next-button:hover::after {
+            width: 100%;
+        }
+
+        .next-button .arrow {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .next-button:hover .arrow {
+            transform: translateX(5px);
+        }
+
+        .next-button .arrow::before,
+        .next-button .arrow::after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .next-button .arrow::before {
+            width: 12px;
+            height: 1px;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .next-button .arrow::after {
+            width: 6px;
+            height: 1px;
+            top: 50%;
+            right: 0;
+            transform: rotate(45deg) translateY(-50%);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: #fff;
+        }
+
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            z-index: 1000;
+        }
+
     </style>
 </head>
 <body>
-    <div class="poem">
-        <p>I want to do it neatly.</p>
-        <p>No mess, no fuss,<br>just gone—<br>like slipping out the back door<br>before anyone notices.</p>
-        <p>I think about it often,<br>how to fold myself away,<br>like a letter never sent,<br>like a note erased.</p>
-        <p>Not yet.<br>But soon, maybe.<br>And if I do,<br>I want to do it well.</p>
+    <div class="cursor"></div>
+    <div class="transition-overlay"></div>
+    <div class="container">
+        <div class="title-container">
+            <h1 class="title">SPARK</h1>
+        </div>
+        <div class="poem">
+            <div class="line">Before breath, before flesh,</div>
+            <div class="line">
+                there is wanting—
+                <div class="wanting-effect"></div>
+            </div>
+            <div class="line">a longing so deep it hums in the bones,</div>
+            <div class="line">a hunger to shape the unseen</div>
+            <div class="line">into something real.</div>
+            <div class="line hands-reach">Hands reach,</div>
+            <div class="line">eyes meet,</div>
+            <div class="line">a whisper in the dark:</div>
+            <div class="line what-if-container">
+                <div class="what-if">what if?</div>
+            </div>
+            <div class="line">A dream pressed into skin,</div>
+            <div class="line">a wish that takes root,</div>
+            <div class="line">small as a sigh,</div>
+            <div class="line">bright as the thought</div>
+            <div class="line">of what could be.</div>
+        </div>
     </div>
-    
+
+    <div class="progress-bar">
+        <div class="progress-indicator"></div>
+    </div>
+    <nav class="next-nav">
+        <a href="anticipation.html" class="next-button">
+            anticipation
+            <span class="arrow"></span>
+        </a>
+    </nav>
+
     <script>
-        function createFloatingElement(text) {
-            const element = document.createElement("div");
-            element.classList.add("floating");
-            element.textContent = text;
-            document.body.appendChild(element);
-            element.style.left = Math.random() * window.innerWidth + "px";
-            element.style.top = Math.random() * window.innerHeight + "px";
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Title animation and fade out on scroll
+        gsap.to('.title', {
+            duration: 2,
+            opacity: 1,
+            ease: "power2.out"
+        });
+
+        gsap.to('.title-container', {
+            scrollTrigger: {
+                trigger: '.container',
+                start: "top top",
+                end: "20% top",
+                scrub: true
+            },
+            opacity: 0.2,
+            scale: 0.8,
+            y: -50
+        });
+
+        // Line-by-line reveal animations with specific effects
+        const lines = document.querySelectorAll('.line');
+        lines.forEach((line, index) => {
+            const baseAnimation = {
+                scrollTrigger: {
+                    trigger: line,
+                    start: "top center",
+                    end: "bottom center",
+                    scrub: 1,
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power2.out"
+            };
+
+            gsap.to(line, baseAnimation);
+
+            // Special effects for specific lines
+            if (line.textContent.includes('wanting')) {
+                gsap.to(line.querySelector('.wanting-effect'), {
+                    scrollTrigger: {
+                        trigger: line,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1,
+                    },
+                    scaleX: 1,
+                    duration: 1,
+                    ease: "power2.inOut"
+                });
+            }
+
+            if (line.classList.contains('hands-reach')) {
+                gsap.to(line, {
+                    scrollTrigger: {
+                        trigger: line,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1,
+                    },
+                    x: 50,
+                    duration: 1,
+                    ease: "power2.inOut"
+                });
+            }
+
+            if (line.querySelector('.what-if')) {
+                // Create ripple effect
+                function createRipple() {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'ripple';
+                    line.appendChild(ripple);
+
+                    gsap.set(ripple, {
+                        left: '50%',
+                        top: '50%',
+                        width: 0,
+                        height: 0,
+                        opacity: 1
+                    });
+
+                    gsap.to(ripple, {
+                        width: 200,
+                        height: 200,
+                        opacity: 0,
+                        duration: 2,
+                        ease: "power2.out",
+                        x: -100,
+                        y: -100,
+                        onComplete: () => ripple.remove()
+                    });
+                }
+
+                ScrollTrigger.create({
+                    trigger: line,
+                    start: "top center",
+                    end: "bottom center",
+                    onEnter: () => {
+                        setInterval(createRipple, 2000);
+                    }
+                });
+            }
+        });
+
+        // Progress bar and next button reveal
+        const progressIndicator = document.querySelector('.progress-indicator');
+        const nextNav = document.querySelector('.next-nav');
+        
+        ScrollTrigger.create({
+            trigger: '.container',
+            start: 'top top',
+            end: 'bottom bottom',
+            onUpdate: (self) => {
+                gsap.to(progressIndicator, {
+                    width: `${self.progress * 100}%`,
+                    duration: 0.1,
+                    ease: 'none'
+                });
+                
+                // Show next button when near the end
+                if (self.progress > 0.95) {
+                    nextNav.classList.add('visible');
+                } else {
+                    nextNav.classList.remove('visible');
+                }
+            }
+        });
+
+        // Next button transition
+        document.querySelector('.next-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = e.target.closest('a').getAttribute('href');
             
-            gsap.to(element, {
-                duration: Math.random() * 5 + 3,
-                x: "random(-50, 50)",
-                y: "random(-50, 50)",
-                rotation: "random(-20, 20)",
-                repeat: -1,
-                yoyo: true,
-                ease: "power1.inOut"
+            gsap.to('.transition-overlay', {
+                scaleY: 1,
+                duration: 1,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    window.location.href = href;
+                }
+            });
+        });
+
+        // Spark creation
+        function createSpark(x, y) {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            spark.style.left = x + 'px';
+            spark.style.top = y + 'px';
+            document.body.appendChild(spark);
+
+            gsap.to(spark, {
+                duration: Math.random() * 2 + 1,
+                x: (Math.random() - 0.5) * 100,
+                y: (Math.random() - 0.5) * 100,
+                opacity: 1,
+                scale: Math.random() * 3,
+                ease: "power2.out",
+                onComplete: () => {
+                    gsap.to(spark, {
+                        duration: 0.5,
+                        opacity: 0,
+                        onComplete: () => spark.remove()
+                    });
+                }
             });
         }
+
+        // Mouse trail effect
+        let timeout;
+        document.addEventListener('mousemove', (e) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                createSpark(e.clientX, e.clientY);
+            }, 50);
+        });
+    </script>
+</body>
+</html>
