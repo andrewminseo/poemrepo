@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Becoming</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #060818;
+            color: #fff;
+            font-family: 'Times New Roman', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .line {
+            font-size: 2.5rem;
+            opacity: 0;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(50px);
+        }
+
+        .path {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .path-progress {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            height: 0%;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
+        .next-nav {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .next-nav.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .next-button {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            text-decoration: none;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .next-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .next-button:hover::after {
+            width: 100%;
+        }
+
+        .glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        .shimmer {
+            background: linear-gradient(
+                90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="starfield"></div>
+    <div class="path">
+        <div class="path-progress"></div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <div class="line" data-effect="horizon">The horizon stretches wide,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="stars">dreams glimmer like distant stars,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="stones">each choice a stepping stone</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="path">on the path to self,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="weight">the weight of potential heavy and sweet.</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="blossom">Responsibilities blossom,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="love">love found, lost, and reclaimed,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="intertwine">laughter and heartache intertwine,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="fabric">shaping the fabric of life</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="thread">with every thread of experience.</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="courage">There's courage in the struggle,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="resilience">resilience in the fall,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="navigate">as the heart learns to navigate</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="dance">the delicate dance of hope,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="forge">forging a future with each beat.</div>
+        </div>
+    </div>
+
+    <nav class="next-nav">
+        <a href="endlessdays.html" class="next-button">endless days</a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Initialize cursor
+            const cursor = document.querySelector('.cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // Create starfield
+            const starfield = document.querySelector('.starfield');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = star.style.height = Math.random() * 2 + 'px';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                starfield.appendChild(star);
+
+                gsap.to(star, {
+                    opacity: Math.random(),
+                    duration: Math.random() * 2 + 1,
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+
+            // Line animations
+            document.querySelectorAll('.line').forEach((line, index) => {
+                const shimmer = document.createElement('div');
+                shimmer.className = 'shimmer';
+                line.appendChild(shimmer);
+
+                // Base animation for all lines
+                gsap.to(line, {
+                    scrollTrigger: {
+                        trigger: line.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1
+                });
+
+                // Shimmer effect
+                gsap.to(shimmer, {
+                    scrollTrigger: {
+                        trigger: line.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    left: "100%",
+                    duration: 2,
+                    ease: "power2.inOut"
+                });
+
+                // Effect-specific animations
+                if (line.dataset.effect === 'stars') {
+                    line.classList.add('glow');
+                }
+            });
+
+            // Path progress
+            gsap.to('.path-progress', {
+                scrollTrigger: {
+                    trigger: ".container",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                },
+                height: "100%",
+                duration: 1
+            });
+
+            // Navigation visibility
+            ScrollTrigger.create({
+                trigger: ".container",
+                start: "top top",
+                end: "bottom bottom",
+                onUpdate: (self) => {
+                    if (self.progress > 0.95) {
+                        document.querySelector('.next-nav').classList.add('visible');
+                    } else {
+                        document.querySelector('.next-nav').classList.remove('visible');
+                    }
+                }
+            });
+
+            // Next button handler
+            document.querySelector('.next-button').addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                
+                gsap.to('body', {
+                    opacity: 0,
+                    duration: 1,
+                    onComplete: () => {
+                        window.location.href = href;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
