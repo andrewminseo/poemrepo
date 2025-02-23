@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f8f0;
+            font-family: 'Times New Roman', serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: none;
+            color: #2c5834;
+        }
+
+        .container {
+            min-height: 500vh;
+            position: relative;
+        }
+
+        .growing-vine {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .vine-path {
+            stroke: #4a8b3b;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        .leaf {
+            fill: #68b050;
+            opacity: 0;
+            transform-origin: center;
+        }
+
+        .title-container {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .title {
+            font-size: 4rem;
+            opacity: 0;
+            letter-spacing: 1rem;
+            color: #2c5834;
+        }
+
+        .poem {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 800px;
+            padding: 2rem;
+            padding-top: 40vh;
+        }
+
+        .line {
+            opacity: 0;
+            transform: translateY(20px);
+            margin-bottom: 35vh;
+            font-size: 1.8rem;
+            line-height: 1.6;
+            position: relative;
+            text-align: center;
+            z-index: 2;
+            mix-blend-mode: difference;
+            color: #2c5834;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2c5834;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .flower {
+            position: absolute;
+            opacity: 0;
+            transform-origin: center;
+        }
+
+        .flower-petal {
+            fill: #ff9ecd;
+        }
+
+        .next-nav {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .next-nav.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .next-button {
+            background: transparent;
+            border: none;
+            color: #2c5834;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .next-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #2c5834;
+            transition: width 0.3s ease;
+        }
+
+        .next-button:hover::after {
+            width: 100%;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(44, 88, 52, 0.2);
+            z-index: 100;
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: #2c5834;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    
+    <svg class="growing-vine" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <!-- Main vine path -->
+        <path class="vine-path" d="M 100,1000 Q 300,800 200,600 T 300,400 T 200,200 T 300,0"/>
+        
+        <!-- Leaves will be added dynamically -->
+        <g class="leaves-container"></g>
+        
+        <!-- Flowers will be added dynamically -->
+        <g class="flowers-container"></g>
+    </svg>
+
+    <div class="container">
+        <div class="title-container">
+            <h1 class="title">GROWTH</h1>
+        </div>
+        <div class="poem">
+            <div class="line">Days turn to years,</div>
+            <div class="line">each step a dance,</div>
+            <div class="line">a rhythm of laughter and tears,</div>
+            <div class="line">as the world spins</div>
+            <div class="line">in colors of joy and discovery.</div>
+            <div class="line">Tiny hands become strong,</div>
+            <div class="line">voices rise in song,</div>
+            <div class="line">the innocence of dreams</div>
+            <div class="line">weaving through time,</div>
+            <div class="line">shaping the heart of who they'll be.</div>
+            <div class="line">Curiosity blossoms,</div>
+            <div class="line">questions bloom like wildflowers,</div>
+            <div class="line">as the tapestry of life</div>
+            <div class="line">unfolds with each new thread,</div>
+            <div class="line">rich with the warmth of love.</div>
+        </div>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-indicator"></div>
+    </div>
+    <nav class="next-nav">
+        <a href="awakening.html" class="next-button">
+            awakening
+            <span class="arrow"></span>
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Initialize variables
+            const cursor = document.querySelector('.cursor');
+            const progressIndicator = document.querySelector('.progress-indicator');
+            const nextNav = document.querySelector('.next-nav');
+            const vinePath = document.querySelector('.vine-path');
+            const leavesContainer = document.querySelector('.leaves-container');
+            const flowersContainer = document.querySelector('.flowers-container');
+
+            // Cursor movement
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // Create leaves along the vine
+            function createLeaf(x, y, rotation) {
+                const leaf = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                leaf.setAttribute("class", "leaf");
+                leaf.setAttribute("d", "M0,0 C5,-5 10,-5 15,0 C10,5 5,5 0,0");
+                leaf.setAttribute("transform", `translate(${x},${y}) rotate(${rotation})`);
+                leavesContainer.appendChild(leaf);
+                return leaf;
+            }
+
+            // Create flowers
+            function createFlower(x, y) {
+                const flower = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                flower.setAttribute("class", "flower");
+                flower.setAttribute("transform", `translate(${x},${y})`);
+
+                // Create petals
+                for (let i = 0; i < 5; i++) {
+                    const petal = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    petal.setAttribute("class", "flower-petal");
+                    petal.setAttribute("d", "M0,0 C5,-5 10,-5 15,0 C10,5 5,5 0,0");
+                    petal.setAttribute("transform", `rotate(${i * 72})`);
+                    flower.appendChild(petal);
+                }
+
+                flowersContainer.appendChild(flower);
+                return flower;
+            }
+
+            // Animate vine growth
+            gsap.to(vinePath, {
+                strokeDashoffset: 0,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".container",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                }
+            });
+
+            // Add and animate leaves along the path
+            const numberOfLeaves = 20;
+            for (let i = 0; i < numberOfLeaves; i++) {
+                const leaf = createLeaf(
+                    100 + Math.random() * 200,
+                    i * (1000 / numberOfLeaves),
+                    Math.random() * 360
+                );
+
+                gsap.to(leaf, {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: "+=45",
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: `${(i / numberOfLeaves) * 100}% center`,
+                        end: `${((i + 1) / numberOfLeaves) * 100}% center`,
+                        scrub: 1
+                    }
+                });
+            }
+
+            // Add and animate flowers
+            const numberOfFlowers = 10;
+            for (let i = 0; i < numberOfFlowers; i++) {
+                const flower = createFlower(
+                    150 + Math.random() * 100,
+                    i * (1000 / numberOfFlowers)
+                );
+
+                gsap.to(flower, {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: 360,
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: `${(i / numberOfFlowers) * 100}% center`,
+                        end: `${((i + 1) / numberOfFlowers) * 100}% center`,
+                        scrub: 1
+                    }
+                });
+            }
+
+            // Title animation
+            gsap.to('.title', {
+                duration: 2,
+                opacity: 1,
+                ease: "power2.out"
+            });
+
+            // Line animations
+            const lines = document.querySelectorAll('.line');
+            lines.forEach((line, index) => {
+                gsap.to(line, {
+                    scrollTrigger: {
+                        trigger: line,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1,
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            });
+
+            // Progress tracking
+            ScrollTrigger.create({
+                trigger: '.container',
+                start: 'top top',
+                end: 'bottom bottom',
+                onUpdate: (self) => {
+                    gsap.to(progressIndicator, {
+                        width: `${self.progress * 100}%`,
+                        duration: 0.1,
+                        ease: 'none'
+                    });
+                    
+                    if (self.progress > 0.95) {
+                        nextNav.classList.add('visible');
+                    } else {
+                        nextNav.classList.remove('visible');
+                    }
+                }
+            });
+
+            // Next button handler with growth finale
+            document.querySelector('.next-button').addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.target.closest('a').getAttribute('href');
+                
+                // Create a burst of growth before transitioning
+                gsap.to('.leaf, .flower', {
+                    scale: 2,
+                    opacity: 1,
+                    duration: 1,
+                    stagger: 0.05,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        window.location.href = href;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
