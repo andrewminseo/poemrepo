@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anticipation</title>
+    <!-- Using GSAP for animations - honestly the best animation library I've found -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        /* Base styles - keeping it clean and minimal */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Dark theme looks more immersive for poetry */
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Times New Roman', serif;
+            overflow-x: hidden;
+            cursor: none; /* Hide cursor for custom one */
+        }
+
+        /* Need lots of scroll space for the animations */
+        .container {
+            min-height: 500vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Floating particles to create depth */
+        .particle {
+            position: fixed;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Love this effect - adds a subtle organic feel */
+        .constellation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Custom cursor makes it feel more interactive */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
+        /* Title styling - going for an ethereal look */
+        .title-container {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .title {
+            font-size: 4rem;
+            opacity: 0;
+            letter-spacing: 1rem;
+        }
+
+        /* Poetry layout - lots of breathing room between lines */
+        .poem {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 800px;
+            padding: 2rem;
+            padding-top: 40vh;
+        }
+
+        .line {
+            opacity: 0;
+            transform: translateY(20px);
+            margin-bottom: 35vh; /* Generous spacing for impact */
+            font-size: 1.8rem;
+            line-height: 1.6;
+            position: relative;
+            text-align: center;
+        }
+
+        /* Time indicator effect - shows temporal flow */
+        .time-indicator {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .time-progress {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            height: 0%;
+        }
+
+        /* Heartbeat effect - ties to the theme */
+        .heartbeat {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            opacity: 0;
+        }
+
+        /* Navigation tweaks from previous page */
+        .next-nav {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .next-nav.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        /* Clean, minimal navigation style */
+        .next-button {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .next-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .next-button:hover::after {
+            width: 100%;
+        }
+
+        /* Progress indicator - helpful for longer poems */
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: #fff;
+        }
+
+        /* Page transition effect */
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom cursor container -->
+    <div class="cursor"></div>
+    
+    <!-- Page transition overlay -->
+    <div class="transition-overlay"></div>
+    
+    <!-- Main content -->
+    <div class="container">
+        <!-- Try making this cooler - maybe add some animation to the letter spacing -->
+        <div class="title-container">
+            <h1 class="title">ANTICIPATION</h1>
+        </div>
+        
+        <!-- Poetry content with special effects for key moments -->
+        <div class="poem">
+            <div class="line">Time holds its breath—</div>
+            <div class="line">
+                waiting for the first heartbeat
+                <div class="heartbeat"></div>
+            </div>
+            <div class="line">a flutter against darkness</div>
+            <div class="line">counting moments until light</div>
+            <div class="line">like stars being born.</div>
+            <div class="line special-glow">Soon, so soon,</div>
+            <div class="line">each second stretches</div>
+            <div class="line">into forever—</div>
+            <div class="line">the universe leans in,</div>
+            <div class="line">holding you</div>
+            <div class="line">in its curved palm</div>
+            <div class="line">ready to unfold.</div>
+        </div>
+    </div>
+
+    <!-- Time tracking visual -->
+    <div class="time-indicator">
+        <div class="time-progress"></div>
+    </div>
+
+    <!-- Subtle progress bar -->
+    <div class="progress-bar">
+        <div class="progress-indicator"></div>
+    </div>
+
+    <!-- Navigation to next poem -->
+    <nav class="next-nav">
+        <a href="emergence.html" class="next-button">
+            emergence
+            <span class="arrow"></span>
+        </a>
+    </nav>
+
+    <script>
+        // Initialize GSAP ScrollTrigger - makes scroll animations way easier
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Custom cursor - adds a nice touch to the interaction
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Constellation effect - one of my favorite additions
+        function createConstellation() {
+            const canvas = document.createElement('canvas');
+            canvas.className = 'constellation';
+            document.body.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            // Need to resize canvas to full window
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            setCanvasSize();
+            window.addEventListener('resize', setCanvasSize);
+
+            // Create star points
+            const points = Array.from({ length: 100 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.2,
+                vy: (Math.random() - 0.5) * 0.2,
+            }));
+
+            // Animation loop for constellation
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+
+                points.forEach(point => {
+                    // Update position
+                    point.x += point.vx;
+                    point.y += point.vy;
+
+                    // Wrap around edges
+                    if (point.x < 0) point.x = canvas.width;
+                    if (point.x > canvas.width) point.x = 0;
+                    if (point.y < 0) point.y = canvas.height;
+                    if (point.y > canvas.height) point.y = 0;
+
+                    // Draw point
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Connect nearby points
+                points.forEach((point, i) => {
+                    points.slice(i + 1).forEach(otherPoint => {
+                        const distance = Math.hypot(point.x - otherPoint.x, point.y - otherPoint.y);
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(point.x, point.y);
+                            ctx.lineTo(otherPoint.x, otherPoint.y);
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        createConstellation();
+
+        // Title fade in and subtle float
+        gsap.to('.title', {
+            duration: 2,
+            opacity: 1,
+            ease: "power2.out"
+        });
+
+        // Title scroll effect
+        gsap.to('.title-container', {
+            scrollTrigger: {
+                trigger: '.container',
+                start: "top top",
+                end: "20% top",
+                scrub: true
+            },
+            opacity: 0.2,
+            scale: 0.8,
+            y: -50
+        });
+
+        // Line animations with special effects
+        const lines = document.querySelectorAll('.line');
+        lines.forEach((line, index) => {
+            // Base animation for each line
+            gsap.to(line, {
+                scrollTrigger: {
+                    trigger: line,
+                    start: "top center",
+                    end: "bottom center",
+                    scrub: 1,
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power2.out"
+            });
+
+            // Special heartbeat effect
+            if (line.textContent.includes('heartbeat')) {
+                const heart = line.querySelector('.heartbeat');
+                gsap.to(heart, {
+                    scrollTrigger: {
+                        trigger: line,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1,
+                    },
+                    scaleX: 1,
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
+        });
+
+        // Progress tracking and navigation
+        const progressIndicator = document.querySelector('.progress-indicator');
+        const timeProgress = document.querySelector('.time-progress');
+        const nextNav = document.querySelector('.next-nav');
+        
+        ScrollTrigger.create({
+            trigger: '.container',
+            start: 'top top',
+            end: 'bottom bottom',
+            onUpdate: (self) => {
+                // Update progress bar
+                gsap.to(progressIndicator, {
+                    width: `${self.progress * 100}%`,
+                    duration: 0.1,
+                    ease: 'none'
+                });
+                
+                // Update time indicator
+                gsap.to(timeProgress, {
+                    height: `${self.progress * 100}%`,
+                    duration: 0.1,
+                    ease: 'none'
+                });
+                
+                // Show next button near end
+                if (self.progress > 0.95) {
+                    nextNav.classList.add('visible');
+                } else {
+                    nextNav.classList.remove('visible');
+                }
+            }
+        });
+
+        // Smooth page transition
+        document.querySelector('.next-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = e.target.closest('a').getAttribute('href');
+            
+            gsap.to('.transition-overlay', {
+                scaleY: 1,
+                duration: 1,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    window.location.href = href;
+                }
+            });
+        });
+
+        // Particle creation for atmosphere
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            document.body.appendChild(particle);
+
+            // Random size and position
+            const size = Math.random() * 3 + 1;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * window.innerWidth}px`;
+            particle.style.top = `${Math.random() * window.innerHeight}px`;
+
+            // Animate particle
+            gsap.to(particle, {
+                duration: Math.random() * 3 + 2,
+                y: '-=100',
+                opacity: 0.7,
+                ease: "power1.out",
+                onComplete: () => {
+                    gsap.to(particle, {
+                        duration: 1,
+                        opacity: 0,
+                        onComplete: () => particle.remove()
+                    });
+                }
+            });
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 1000);
+    </script>
