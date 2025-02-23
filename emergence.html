@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Previous head content remains the same -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergence</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        /* All previous styles remain exactly the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            font-family: 'Times New Roman', serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: none;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            transition: background 2s ease;
+            z-index: -1;
+        }
+
+        .container {
+            min-height: 500vh;
+            position: relative;
+        }
+
+        .title-container {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .title {
+            font-size: 4rem;
+            opacity: 0;
+            letter-spacing: 1rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .poem {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 800px;
+            padding: 2rem;
+            padding-top: 40vh;
+        }
+
+        .line {
+            opacity: 0;
+            transform: translateY(20px);
+            margin-bottom: 35vh;
+            font-size: 1.8rem;
+            line-height: 1.6;
+            position: relative;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .firework-particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            transform-origin: center;
+        }
+
+        .trail {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 1;
+            mix-blend-mode: screen;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
+        .next-nav {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .next-nav.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .next-button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .next-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+
+        .next-button:hover::after {
+            width: 100%;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 100;
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="gradient-bg"></div>
+    <div class="container">
+        <div class="title-container">
+            <h1 class="title">EMERGENCE</h1>
+        </div>
+        <div class="poem">
+            <div class="line">In the stillness, a shift begins,</div>
+            <div class="line">skin stretching to accommodate</div>
+            <div class="line">the miracle of being,</div>
+            <div class="line">a journey unfolding,</div>
+            <div class="line">each moment a new beginning.</div>
+            <div class="line">Cries break the silence,</div>
+            <div class="line">a voice declaring existence,</div>
+            <div class="line">the world inhales,</div>
+            <div class="line">caught in the wonder</div>
+            <div class="line">of what has just arrived.</div>
+            <div class="line">Tiny fingers grasp at air,</div>
+            <div class="line">eyes wide with discovery,</div>
+            <div class="line">every breath a testament</div>
+            <div class="line">to the love that birthed</div>
+            <div class="line">this fragile light.</div>
+        </div>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-indicator"></div>
+    </div>
+    <nav class="next-nav">
+        <a href="growth.html" class="next-button">
+            growth
+            <span class="arrow"></span>
+        </a>
+    </nav>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Initialize variables
+            const cursor = document.querySelector('.cursor');
+            const gradientBg = document.querySelector('.gradient-bg');
+            const progressIndicator = document.querySelector('.progress-indicator');
+            const nextNav = document.querySelector('.next-nav');
+            const nextButton = document.querySelector('.next-button');
+
+            // Gradient backgrounds
+            const gradients = [
+                'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
+                'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)',
+                'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+                'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)',
+                'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)',
+                'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'
+            ];
+
+            let currentGradient = 0;
+
+            // Cursor movement
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // Gradient cycling
+            function changeGradient() {
+                currentGradient = (currentGradient + 1) % gradients.length;
+                gradientBg.style.background = gradients[currentGradient];
+            }
+            setInterval(changeGradient, 5000);
+
+            // Firework class
+            class Firework {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.colors = [
+                        '#FF69B4', '#FFD700', '#FF6B6B', '#4ECDC4', 
+                        '#A1C4FD', '#FBC2EB', '#8FD3F4', '#D4FC79'
+                    ];
+                    this.create();
+                }
+
+                create() {
+                    const particleCount = 30;
+                    const baseAngle = (Math.PI * 2) / particleCount;
+                    const baseColor = this.colors[Math.floor(Math.random() * this.colors.length)];
+
+                    for (let i = 0; i < particleCount; i++) {
+                        const angle = baseAngle * i + (Math.random() * 0.5 - 0.25);
+                        const velocity = 1 + Math.random();
+                        const size = Math.random() * 4 + 2;
+                        const lifetime = 2 + Math.random() * 1;
+                        const color = this.generateComplimentaryColor(baseColor);
+
+                        this.createParticle(angle, velocity, size, lifetime, color);
+                    }
+                }
+
+                createParticle(angle, velocity, size, lifetime, color) {
+                    const particle = document.createElement('div');
+                    particle.className = 'firework-particle';
+                    document.body.appendChild(particle);
+
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.background = color;
+                    particle.style.left = this.x + 'px';
+                    particle.style.top = this.y + 'px';
+
+                    const distance = 150 + Math.random() * 100;
+                    const timeline = gsap.timeline({
+                        onComplete: () => {
+                            particle.remove();
+                            this.createTrail(this.x, this.y, color);
+                        }
+                    });
+
+                    timeline.to(particle, {
+                        duration: lifetime,
+                        x: Math.cos(angle) * distance * velocity,
+                        y: Math.sin(angle) * distance * velocity,
+                        ease: "power2.out",
+                        opacity: 0.7
+                    })
+                    .to(particle, {
+                        duration: lifetime * 0.5,
+                        opacity: 0,
+                        ease: "power2.in"
+                    }, "-=" + lifetime * 0.3);
+                }
+
+                createTrail(x, y, color) {
+                    const trail = document.createElement('div');
+                    trail.className = 'trail';
+                    document.body.appendChild(trail);
+
+                    const size = Math.random() * 20 + 10;
+                    trail.style.width = size + 'px';
+                    trail.style.height = size + 'px';
+                    trail.style.background = color;
+                    trail.style.left = (x + Math.random() * 100 - 50) + 'px';
+                    trail.style.top = (y + Math.random() * 100 - 50) + 'px';
+
+                    gsap.to(trail, {
+                        duration: 3 + Math.random() * 2,
+                        opacity: 0,
+                        scale: 0.1,
+                        ease: "power2.out",
+                        onComplete: () => trail.remove()
+                    });
+                }
+
+                generateComplimentaryColor(baseColor) {
+                    const hslMatch = baseColor.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+                    if (hslMatch) {
+                        const r = parseInt(hslMatch[1], 16);
+                        const g = parseInt(hslMatch[2], 16);
+                        const b = parseInt(hslMatch[3], 16);
+                        const variation = Math.random() * 30 - 15;
+                        return `rgb(${Math.min(255, Math.max(0, r + variation))}, 
+                                   ${Math.min(255, Math.max(0, g + variation))}, 
+                                   ${Math.min(255, Math.max(0, b + variation))})`;
+                    }
+                    return baseColor;
+                }
+            }
+
+            // Click handler for fireworks
+            document.addEventListener('click', (e) => {
+                new Firework(e.clientX, e.clientY);
+            });
+
+            // Title animation
+            gsap.to('.title', {
+                duration: 2,
+                opacity: 1,
+                ease: "power2.out"
+            });
+
+            // Line animations
+            const lines = document.querySelectorAll('.line');
+            lines.forEach((line, index) => {
+                gsap.to(line, {
+                    scrollTrigger: {
+                        trigger: line,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1,
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            });
+
+            // Progress tracking
+            ScrollTrigger.create({
+                trigger: '.container',
+                start: 'top top',
+                end: 'bottom bottom',
+                onUpdate: (self) => {
+                    gsap.to(progressIndicator, {
+                        width: `${self.progress * 100}%`,
+                        duration: 0.1,
+                        ease: 'none'
+                    });
+                    
+                    if (self.progress > 0.95) {
+                        nextNav.classList.add('visible');
+                    } else {
+                        nextNav.classList.remove('visible');
+                    }
+                }
+            });
+
+            // Next button handler
+            nextButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.target.closest('a').getAttribute('href');
+                
+                // Create multiple waves of fireworks
+                const finale = () => {
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => {
+                            new Firework(
+                                Math.random() * window.innerWidth,
+                                Math.random() * window.innerHeight
+                            );
+                        }, i * 300);
+                    }
+                };
+
+                for (let wave = 0; wave < 3; wave++) {
+                    setTimeout(finale, wave * 1500);
+                }
+                
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>
