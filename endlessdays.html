@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endless Days</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Times New Roman', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .alarm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #ff000030 0%, transparent 70%);
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        .section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .line {
+            font-size: 2.5rem;
+            opacity: 0;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(50px);
+        }
+
+        .brick {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100px;
+            height: 40px;
+            transform: scale(0);
+        }
+
+        .pressure-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 5px;
+            background: rgba(255, 0, 0, 0.3);
+            transform-origin: bottom;
+            transform: scaleY(0);
+            z-index: 1;
+        }
+
+        .clock {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            opacity: 0.3;
+            font-family: monospace;
+            z-index: 3;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
+        .task {
+            position: absolute;
+            font-size: 1rem;
+            opacity: 0;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+
+        .flicker {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px #ff6b6b;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .trembling-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .question-mark {
+            font-size: 5rem;
+            opacity: 0;
+            transform: scale(0);
+            position: fixed;
+            z-index: 3;
+        }
+
+        #alarmSound {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <audio id="alarmSound" src="alarmasset.mp3" preload="auto"></audio>
+    <div class="cursor"></div>
+    <div class="alarm-overlay"></div>
+    <div class="pressure-indicator"></div>
+    <div class="clock">07:00</div>
+    <div class="flicker"></div>
+    <div class="trembling-overlay"></div>
+
+    <div class="container">
+        <div class="section">
+            <div class="line" data-effect="alarm">The alarm hums the same song,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="impact">feet hit the floor,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="cycle">the cycle begins again,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="steady">a rhythm too steady to notice,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="loud">too loud to ignore.</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="stack">Work stacks like bricks,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="blur">meetings blur into evenings,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="fire">the fire once burning bright</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="weight">now flickers beneath the weight</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="endless">of endless expectations.</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="drip">Passion drips through the cracks,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="fray">ambition frays at the edges,</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="hands">hands once eager to build</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="tremble">now tremble under the thought—</div>
+        </div>
+        <div class="section">
+            <div class="line" data-effect="question"><em>is this all there is?</em></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const alarm = document.getElementById('alarmSound');
+            const alarmOverlay = document.querySelector('.alarm-overlay');
+            const cursor = document.querySelector('.cursor');
+            const clock = document.querySelector('.clock');
+            const flicker = document.querySelector('.flicker');
+            const pressureIndicator = document.querySelector('.pressure-indicator');
+
+            // Initialize cursor
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // Alarm sequence
+            function startAlarm() {
+                alarm.play();
+                gsap.to(alarmOverlay, {
+                    opacity: 1,
+                    duration: 0.5,
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+
+            // Clock animation
+            function updateClock() {
+                let hours = 7;
+                let minutes = 0;
+                
+                gsap.to({}, {
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1,
+                        onUpdate: (self) => {
+                            minutes = Math.floor(self.progress * 720); // 12 hours in minutes
+                            hours = 7 + Math.floor(minutes / 60);
+                            minutes = minutes % 60;
+                            clock.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                        }
+                    }
+                });
+            }
+
+            // Pressure build-up
+            gsap.to(pressureIndicator, {
+                scrollTrigger: {
+                    trigger: ".container",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1
+                },
+                scaleY: 1,
+                duration: 1
+            });
+
+            // Line animations
+            document.querySelectorAll('.line').forEach((line, index) => {
+                const effect = line.dataset.effect;
+
+                // Base animation for all lines
+                gsap.to(line, {
+                    scrollTrigger: {
+                        trigger: line.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1
+                });
+
+                // Effect-specific animations
+                switch(effect) {
+                    case 'alarm':
+                        ScrollTrigger.create({
+                            trigger: line.parentElement,
+                            start: "top center",
+                            onEnter: startAlarm
+                        });
+                        break;
+                    case 'impact':
+                        gsap.to(line.parentElement, {
+                            scrollTrigger: {
+                                trigger: line.parentElement,
+                                start: "top center",
+                                toggleActions: "play none none reverse"
+                            },
+                            scale: 1.1,
+                            duration: 0.2,
+                            yoyo: true,
+                            repeat: 1
+                        });
+                        break;
+                    case 'stack':
+                        createBricks(line.parentElement);
+                        break;
+                    case 'fire':
+                        gsap.to(flicker, {
+                            scrollTrigger: {
+                                trigger: line.parentElement,
+                                start: "top center",
+                                end: "bottom center",
+                                toggleActions: "play none none reverse"
+                            },
+                            opacity: 0.3,
+                            duration: 1
+                        });
+                        break;
+                    case 'question':
+                        createQuestionMarks();
+                        break;
+                }
+            });
+
+            // Create falling bricks effect
+            function createBricks(container) {
+                for (let i = 0; i < 10; i++) {
+                    const brick = document.createElement('div');
+                    brick.className = 'brick';
+                    container.appendChild(brick);
+
+                    gsap.to(brick, {
+                        scrollTrigger: {
+                            trigger: container,
+                            start: "top center",
+                            toggleActions: "play none none reverse"
+                        },
+                        scale: 1,
+                        y: Math.random() * 200,
+                        x: Math.random() * 400 - 200,
+                        rotation: Math.random() * 360,
+                        duration: 1,
+                        delay: i * 0.1
+                    });
+                }
+            }
+
+            // Create question marks effect
+            function createQuestionMarks() {
+                for (let i = 0; i < 5; i++) {
+                    const mark = document.createElement('div');
+                    mark.className = 'question-mark';
+                    mark.textContent = '?';
+                    mark.style.left = Math.random() * 80 + 10 + 'vw';
+                    mark.style.top = Math.random() * 80 + 10 + 'vh';
+                    document.body.appendChild(mark);
+
+                    gsap.to(mark, {
+                        scrollTrigger: {
+                            trigger: document.querySelector('[data-effect="question"]').parentElement,
+                            start: "top center",
+                            toggleActions: "play none none reverse"
+                        },
+                        opacity: 0.3,
+                        scale: 1,
+                        rotation: Math.random() * 360,
+                        duration: 1,
+                        delay: i * 0.2
+                    });
+                }
+            }
+
+            // Initialize animations
+            updateClock();
+        });
+    </script>
+</body>
+</html>
