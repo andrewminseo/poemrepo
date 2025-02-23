@@ -15,109 +15,113 @@
 
         body {
             background: #0a0a0a;
+            color: #fff;
             font-family: 'Times New Roman', serif;
             overflow-x: hidden;
-            color: #fff;
+            cursor: none;
         }
 
         .container {
-            min-height: 1500vh;
+            min-height: 1000vh;
             position: relative;
         }
 
-        .line-section {
+        .line-container {
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
             overflow: hidden;
-            perspective: 1000px;
-            transition: background 0.5s ease;
         }
 
         .line {
-            font-size: 3rem;
-            text-align: center;
+            font-size: 2.5rem;
             opacity: 0;
-            padding: 2rem;
+            text-align: center;
             position: relative;
+            padding: 2rem;
             z-index: 2;
-            mix-blend-mode: difference;
-            max-width: 800px;
         }
 
-        /* Effect styles */
-        .effect-container {
+        /* Flicker effect */
+        .flicker-line {
+            text-shadow: 0 0 10px #fff;
+        }
+
+        /* Shadow dance effect */
+        .shadow-container {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
+            top: 0;
+            left: 0;
         }
 
-        /* Particle effects */
-        .particle {
+        .shadow {
             position: absolute;
-            pointer-events: none;
-            border-radius: 50%;
-            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            filter: blur(10px);
         }
 
         /* Mirror effect */
-        .mirror-shard {
-            position: absolute;
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-            transform-origin: center;
+        .mirror-effect {
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
-        /* Wave effect */
-        .wave {
-            position: absolute;
-            width: 200%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            opacity: 0;
-        }
-
-        /* World grid */
-        .world-grid {
+        /* Surge effect */
+        .surge-wave {
             position: absolute;
             width: 200%;
-            height: 200%;
-            background: 
-                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0;
-            transform: translate(-25%, -25%);
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
         }
 
-        /* Paint strokes */
-        .paint-stroke {
+        /* Heartbeat effect */
+        .heartbeat-container {
             position: absolute;
-            height: 3px;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-            transform-origin: left;
-            opacity: 0;
-        }
-
-        /* Section transitions */
-        .transition-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.8));
-            pointer-events: none;
-            opacity: 0;
-            z-index: 1;
         }
 
-        /* Navigation */
+        .pulse {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        /* World expansion effect */
+        .expansion-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, #0a0a0a 70%);
+        }
+
+        /* Passion hues */
+        .color-splash {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            opacity: 0;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
         .next-nav {
             position: fixed;
             bottom: 40px;
@@ -125,7 +129,7 @@
             z-index: 100;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.5s ease;
+            transition: opacity 0.5s ease;
         }
 
         .next-nav.visible {
@@ -135,441 +139,523 @@
 
         .next-button {
             background: transparent;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: none;
             color: #fff;
-            font-size: 1.2rem;
-            padding: 1rem 2rem;
-            cursor: pointer;
+            font-size: 1rem;
             text-decoration: none;
-            transition: all 0.3s ease;
-            border-radius: 30px;
+            padding: 1rem;
+            position: relative;
         }
 
-        .next-button:hover {
-            background: rgba(255,255,255,0.1);
-            transform: scale(1.05);
-        }
-
-        .progress-bar {
-            position: fixed;
+        .next-button::after {
+            content: '';
+            position: absolute;
             bottom: 0;
             left: 0;
-            width: 100%;
-            height: 3px;
-            background: rgba(255,255,255,0.1);
-            z-index: 100;
-        }
-
-        .progress-indicator {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
             width: 0;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
         }
 
-        /* Special effects */
-        .flicker { animation: textFlicker 2s infinite alternate; }
-        .glow { text-shadow: 0 0 20px currentColor; }
-        .mirror { transform-style: preserve-3d; }
-
-        @keyframes textFlicker {
-            0%, 100% { 
-                text-shadow: 
-                    0 0 20px #ff6b6b,
-                    0 0 40px #ff8787,
-                    0 0 60px #ffa8a8;
-                opacity: 1;
-            }
-            50% { 
-                text-shadow: none;
-                opacity: 0.3;
-            }
+        .next-button:hover::after {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="container"></div>
-    <div class="transition-overlay"></div>
-    
-    <div class="progress-bar">
-        <div class="progress-indicator"></div>
+    <div class="cursor"></div>
+    <div class="container">
+        <!-- Each line gets its own full-height container -->
+        <div class="line-container">
+            <div class="line flicker-line" data-effect="flicker">A flicker ignites within,</div>
+        </div>
+        <div class="line-container">
+            <div class="shadow-container"></div>
+            <div class="line" data-effect="shadows">shadows dance in the mind,</div>
+        </div>
+        <div class="line-container">
+            <div class="line mirror-effect" data-effect="mirror">the mirror reflects a stranger,</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="bloom">as the self begins to bloom</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="chaos">in the chaos of change.</div>
+        </div>
+        <div class="line-container">
+            <div class="surge-wave"></div>
+            <div class="line" data-effect="surge">Emotions surge like tides,</div>
+        </div>
+        <div class="line-container">
+            <div class="heartbeat-container"></div>
+            <div class="line" data-effect="heartbeat">heartbeats sync with dreams,</div>
+        </div>
+        <div class="line-container">
+            <div class="expansion-container"></div>
+            <div class="line" data-effect="expand">the world expands and contracts,</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="pulse">filled with the pulse of longing,</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="belong">a search for a place to belong.</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="blossom">Friendships blossom,</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="break">hearts break and mend,</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="canvas">a canvas of moments</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="passion">painted in hues of passion,</div>
+        </div>
+        <div class="line-container">
+            <div class="line" data-effect="journey">as the journey of becoming unfolds.</div>
+        </div>
     </div>
-    
+
     <nav class="next-nav">
-        <a href="becoming.html" class="next-button">becoming →</a>
+        <a href="becoming.html" class="next-button">becoming</a>
     </nav>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
 
-            const poem = [
-                "A flicker ignites within,",
-                "shadows dance in the mind,",
-                "the mirror reflects a stranger,",
-                "as the self begins to bloom",
-                "in the chaos of change.",
-                "Emotions surge like tides,",
-                "heartbeats sync with dreams,",
-                "the world expands and contracts,",
-                "filled with the pulse of longing,",
-                "a search for a place to belong.",
-                "Friendships blossom,",
-                "hearts break and mend,",
-                "a canvas of moments",
-                "painted in hues of passion,",
-                "as the journey of becoming unfolds."
-            ];
+            // Cursor movement
+            const cursor = document.querySelector('.cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
 
-            // Create sections
-            const container = document.querySelector('.container');
-            poem.forEach((line, index) => {
-                const section = document.createElement('div');
-                section.className = 'line-section';
-                
-                const effectContainer = document.createElement('div');
-                effectContainer.className = 'effect-container';
-                
-                const lineElement = document.createElement('div');
-                lineElement.className = `line line-${index + 1}`;
-                lineElement.textContent = line;
-                
-                section.appendChild(effectContainer);
-                section.appendChild(lineElement);
-                container.appendChild(section);
+            // Line-specific animations
+            const lineContainers = document.querySelectorAll('.line-container');
 
-                // Section transition effect
+            lineContainers.forEach((container, index) => {
+                const line = container.querySelector('.line');
+                const effect = line.dataset.effect;
+
+                // Base animation for all lines
+                gsap.to(line, {
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 1,
+                        toggleActions: "play none none reverse"
+                    },
+                    opacity: 1,
+                    duration: 1
+                });
+
+                // Effect-specific animations
+                switch(effect) {
+                    case 'flicker':
+                        createFlickerEffect(line);
+                        break;
+                    case 'shadows':
+                        createShadowDance(container);
+                        break;
+                    case 'mirror':
+                        createMirrorEffect(line);
+                        break;
+                    case 'bloom':
+                        createBloomEffect(line);
+                        break;
+                    case 'chaos':
+                        createChaosEffect(line);
+                        break;
+                    case 'surge':
+                        createSurgeEffect(container);
+                        break;
+                    case 'heartbeat':
+                        createHeartbeatEffect(container);
+                        break;
+                    case 'expand':
+                        createExpansionEffect(container);
+                        break;
+                    case 'pulse':
+                        createPulseEffect(line);
+                        break;
+                    case 'belong':
+                        createBelongingEffect(line);
+                        break;
+                    case 'blossom':
+                        createBlossomEffect(container);
+                        break;
+                    case 'break':
+                        createHeartbreakEffect(line);
+                        break;
+                    case 'canvas':
+                        createCanvasEffect(container);
+                        break;
+                    case 'passion':
+                        createPassionEffect(container);
+                        break;
+                    case 'journey':
+                        createJourneyEffect(line);
+                        break;
+                }
+            });
+
+            // Effect creation functions
+            function createMirrorEffect(element) {
+                gsap.to(element, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    rotationY: 180,
+                    duration: 2,
+                    ease: "power2.inOut",
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+
+            function createBloomEffect(element) {
+                gsap.fromTo(element, 
+                    { scale: 0, opacity: 0 },
+                    {
+                        scrollTrigger: {
+                            trigger: element.parentElement,
+                            start: "top center",
+                            end: "bottom center",
+                            toggleActions: "play none none reverse"
+                        },
+                        scale: 1,
+                        opacity: 1,
+                        duration: 2,
+                        ease: "power2.out"
+                    }
+                );
+            }
+
+            function createChaosEffect(element) {
+                const letters = element.textContent.split('');
+                element.textContent = '';
+                letters.forEach(letter => {
+                    const span = document.createElement('span');
+                    span.textContent = letter;
+                    element.appendChild(span);
+                });
+
+                gsap.to(element.children, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: "random(-50, 50)",
+                    x: "random(-50, 50)",
+                    rotation: "random(-45, 45)",
+                    duration: 1,
+                    ease: "power2.inOut",
+                    stagger: 0.05,
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+
+            function createExpansionEffect(container) {
+                const expansionEl = container.querySelector('.expansion-container');
+                gsap.fromTo(expansionEl,
+                    { background: 'radial-gradient(circle at center, #fff 0%, #0a0a0a 0%)' },
+                    {
+                        scrollTrigger: {
+                            trigger: container,
+                            start: "top center",
+                            end: "bottom center",
+                            toggleActions: "play none none reverse"
+                        },
+                        background: 'radial-gradient(circle at center, #fff 70%, #0a0a0a 100%)',
+                        duration: 2,
+                        ease: "power2.inOut",
+                        repeat: -1,
+                        yoyo: true
+                    }
+                );
+            }
+
+            function createPulseEffect(element) {
+                gsap.to(element, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    scale: 1.1,
+                    duration: 1,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "power1.inOut"
+                });
+            }
+
+            function createBelongingEffect(element) {
+                gsap.to(element, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    x: 100,
+                    duration: 2,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
+
+            function createBlossomEffect(container) {
+                for (let i = 0; i < 10; i++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'color-splash';
+                    petal.style.background = `hsl(${Math.random() * 60 + 300}, 70%, 50%)`;
+                    container.appendChild(petal);
+
+                    gsap.to(petal, {
+                        scrollTrigger: {
+                            trigger: container,
+                            start: "top center",
+                            end: "bottom center",
+                            toggleActions: "play none none reverse"
+                        },
+                        x: 'random(-200, 200)',
+                        y: 'random(-200, 200)',
+                        scale: 'random(1, 3)',
+                        opacity: 0.7,
+                        duration: 'random(2, 4)',
+                        repeat: -1,
+                        yoyo: true
+                    });
+                }
+            }
+
+            function createHeartbreakEffect(element) {
+                const parts = element.textContent.split('and');
+                element.innerHTML = `<span>${parts[0]}</span><span>and${parts[1]}</span>`;
+                
+                gsap.to(element.firstChild, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    x: -50,
+                    opacity: 0.5,
+                    duration: 1,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                    repeat: -1
+                });
+
+                gsap.to(element.lastChild, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    x: 50,
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
+
+            function createCanvasEffect(container) {
+                for (let i = 0; i < 20; i++) {
+                    const stroke = document.createElement('div');
+                    stroke.className = 'color-splash';
+                    stroke.style.background = `hsla(${Math.random() * 360}, 70%, 50%, 0.3)`;
+                    container.appendChild(stroke);
+
+                    gsap.fromTo(stroke,
+                        { opacity: 0, scale: 0 },
+                        {
+                            scrollTrigger: {
+                                trigger: container,
+                                start: "top center",
+                                end: "bottom center",
+                                toggleActions: "play none none reverse"
+                            },
+                            opacity: 0.7,
+                            scale: 'random(1, 4)',
+                            duration: 'random(1, 3)',
+                            delay: 'random(0, 2)',
+                            repeat: -1,
+                            yoyo: true
+                        }
+                    );
+                }
+            }
+
+            function createPassionEffect(container) {
+                const colors = ['#FF3366', '#FF6633', '#FFCC33'];
+                for (let i = 0; i < colors.length; i++) {
+                    const hue = document.createElement('div');
+                    hue.className = 'color-splash';
+                    hue.style.background = colors[i];
+                    container.appendChild(hue);
+
+                    gsap.to(hue, {
+                        scrollTrigger: {
+                            trigger: container,
+                            start: "top center",
+                            end: "bottom center",
+                            toggleActions: "play none none reverse"
+                        },
+                        opacity: 0.5,
+                        scale: 3,
+                        rotation: 360,
+                        duration: 2,
+                        repeat: -1,
+                        ease: "none"
+                    });
+                }
+            }
+
+            function createJourneyEffect(element) {
+                const words = element.textContent.split(' ');
+                element.innerHTML = words.map(word => `<span>${word} </span>`).join('');
+                
+                gsap.to(element.children, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: -20,
+                    opacity: 1,
+                    duration: 1,
+                    stagger: 0.2,
+                    ease: "power2.out"
+                });
+            }
+
+            function createFlickerEffect(element) {
+                gsap.to(element, {
+                    scrollTrigger: {
+                        trigger: element.parentElement,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    textShadow: "0 0 20px #fff",
+                    opacity: 1,
+                    duration: 0.1,
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+
+            function createShadowDance(container) {
+                const shadowContainer = container.querySelector('.shadow-container');
+                for (let i = 0; i < 5; i++) {
+                    const shadow = document.createElement('div');
+                    shadow.className = 'shadow';
+                    shadowContainer.appendChild(shadow);
+
+                    gsap.to(shadow, {
+                        x: 'random(-100, 100, 5)',
+                        y: 'random(-100, 100, 5)',
+                        scale: 'random(1, 2)',
+                        opacity: 'random(0.1, 0.3)',
+                        duration: 'random(2, 4)',
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut"
+                    });
+                }
+            }
+
+            function createSurgeEffect(container) {
+                const wave = container.querySelector('.surge-wave');
+                gsap.to(wave, {
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top center",
+                        end: "bottom center",
+                        toggleActions: "play none none reverse"
+                    },
+                    x: "100%",
+                    duration: 2,
+                    ease: "power2.inOut",
+                    repeat: -1
+                });
+            }
+
+            function createHeartbeatEffect(container) {
+                const heartbeatContainer = container.querySelector('.heartbeat-container');
+                
+                function createPulse() {
+                    const pulse = document.createElement('div');
+                    pulse.className = 'pulse';
+                    heartbeatContainer.appendChild(pulse);
+                    
+                    gsap.to(pulse, {
+                        scale: 20,
+                        opacity: 0,
+                        duration: 2,
+                        ease: "power2.out",
+                        onComplete: () => pulse.remove()
+                    });
+                }
+
                 ScrollTrigger.create({
-                    trigger: section,
+                    trigger: container,
                     start: "top center",
                     end: "bottom center",
                     onEnter: () => {
-                        gsap.to('.transition-overlay', {
-                            opacity: 0.5,
-                            duration: 0.5,
-                            ease: "power2.inOut"
-                        });
-                    },
-                    onLeave: () => {
-                        gsap.to('.transition-overlay', {
-                            opacity: 0,
-                            duration: 0.5,
-                            ease: "power2.inOut"
-                        });
+                        setInterval(createPulse, 1000);
+                    }
+                });
+            }
+
+            // Navigation visibility
+            ScrollTrigger.create({
+                trigger: ".container",
+                start: "top top",
+                end: "bottom bottom",
+                onUpdate: (self) => {
+                    if (self.progress > 0.95) {
+                        document.querySelector('.next-nav').classList.add('visible');
+                    } else {
+                        document.querySelector('.next-nav').classList.remove('visible');
+                    }
+                }
+            });
+
+            // Next button handler
+            document.querySelector('.next-button').addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                
+                // Transition effect
+                gsap.to('body', {
+                    opacity: 0,
+                    duration: 1,
+                    onComplete: () => {
+                        window.location.href = href;
                     }
                 });
             });
-
-            // Helper function for particle creation
-            function createParticles(container, count, options = {}) {
-                const particles = [];
-                for(let i = 0; i < count; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    container.appendChild(particle);
-                    particles.push(particle);
-                }
-                return particles;
-            }
-
-            // Line-specific animations
-            document.querySelectorAll('.line-section').forEach((section, index) => {
-                const line = section.querySelector('.line');
-                const effectContainer = section.querySelector('.effect-container');
-
-                // Base animation for all lines
-                gsap.fromTo(line,
-                    { opacity: 0, y: 50 },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1,
-                        scrollTrigger: {
-                            trigger: section,
-                            start: "top center",
-                            end: "center center",
-                            scrub: 1
-                        }
-                    }
-                );
-
-                // Specific animations for each line
-                switch(index) {
-                    case 0: // Flicker
-                        line.classList.add('flicker');
-                        createParticles(effectContainer, 30).forEach(particle => {
-                            gsap.to(particle, {
-                                x: 'random(-200, 200)',
-                                y: 'random(-200, 200)',
-                                opacity: 'random(0.3, 0.7)',
-                                duration: 'random(1, 3)',
-                                repeat: -1,
-                                ease: 'power1.out'
-                            });
-                        });
-                        break;
-
-                    case 1: // Shadows
-                        for(let i = 0; i < 5; i++) {
-                            const shadow = document.createElement('div');
-                            shadow.className = 'mirror-shard';
-                            effectContainer.appendChild(shadow);
-                            
-                            gsap.to(shadow, {
-                                x: 'random(-100%, 100%)',
-                                y: 'random(-100%, 100%)',
-                                rotation: 'random(-180, 180)',
-                                opacity: 'random(0.1, 0.3)',
-                                duration: 'random(3, 5)',
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'sine.inOut'
-                            });
-                        }
-                        break;
-
-                    case 2: // Mirror
-                        for(let i = 0; i < 20; i++) {
-                            const shard = document.createElement('div');
-                            shard.className = 'mirror-shard';
-                            effectContainer.appendChild(shard);
-
-                            gsap.to(shard, {
-                                x: 'random(-100%, 100%)',
-                                y: 'random(-100%, 100%)',
-                                rotation: 'random(-180, 180)',
-                                opacity: 0.2,
-                                duration: 2,
-                                delay: i * 0.1,
-                                ease: 'power2.out'
-                            });
-                        }
-                        break;
-
-                    case 3: // Bloom
-                        createParticles(effectContainer, 40).forEach(particle => {
-                            gsap.to(particle, {
-                                x: 'random(-300, 300)',
-                                y: 'random(-300, 300)',
-                                scale: 'random(1, 3)',
-                                opacity: 'random(0.3, 0.7)',
-                                duration: 'random(2, 4)',
-                                repeat: -1,
-                                ease: 'power1.out'
-                            });
-                        });
-                        break;
-
-                    case 4: // Chaos
-                        const letters = line.textContent.split('');
-                        line.textContent = '';
-                        letters.forEach(letter => {
-                            const span = document.createElement('span');
-                            span.textContent = letter;
-                            line.appendChild(span);
-                            
-                            gsap.to(span, {
-                                x: 'random(-50, 50)',
-                                y: 'random(-50, 50)',
-                                rotation: 'random(-45, 45)',
-                                duration: 'random(1, 2)',
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'none'
-                            });
-                        });
-                        break;
-
-                    case 5: // Emotions/Tides
-                        for(let i = 0; i < 10; i++) {
-                            const wave = document.createElement('div');
-                            wave.className = 'wave';
-                            effectContainer.appendChild(wave);
-                            
-                            gsap.to(wave, {
-                                x: '100%',
-                                opacity: 0.5,
-                                duration: 3,
-                                delay: i * 0.2,
-                                repeat: -1,
-                                ease: 'sine.inOut'
-                            });
-                        }
-                        break;
-
-                    case 6: // Heartbeats
-                        const heart = document.createElement('div');
-                        heart.className = 'particle';
-                        heart.style.background = '#ff4444';
-                        effectContainer.appendChild(heart);
-                        
-                        gsap.to(heart, {
-                            scale: 2,
-                            opacity: 0.7,
-                            duration: 1,
-                            repeat: -1,
-                            yoyo: true,
-                            ease: 'power1.inOut'
-                        });
-                        break;
-
-                    case 7: // World expansion
-                        const grid = document.createElement('div');
-                        grid.className = 'world-grid';
-                        effectContainer.appendChild(grid);
-                        
-                        gsap.to(grid, {
-                            scale: 2,
-                            rotation: 45,
-                            opacity: 0.3,
-                            duration: 3,
-                            repeat: -1,
-                            yoyo: true,
-                            ease: 'none'
-                        });
-                        break;
-
-                    case 8: // Pulse
-                        createParticles(effectContainer, 20).forEach(particle => {
-                            gsap.to(particle, {
-                                scale: 'random(1, 4)',
-                                opacity: 'random(0.2, 0.5)',
-                                duration: 'random(1, 3)',
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'sine.inOut'
-                            });
-                        });
-                        break;
-
-                    case 9: // Search/Belong
-                        const searchLight = document.createElement('div');
-                        searchLight.className = 'particle';
-                        effectContainer.appendChild(searchLight);
-                        
-                        gsap.to(searchLight, {
-                            x: 'random(-200, 200)',
-                            y: 'random(-200, 200)',
-                            scale: 3,
-                            opacity: 0.3,
-                            duration: 3,
-                            repeat: -1,
-                            ease: 'power1.inOut'
-                        });
-                        break;
-
-                    case 10: // Friendships
-                        for(let i = 0; i < 15; i++) {
-                            const connection = document.createElement('div');
-                            connection.className = 'paint-stroke';
-                            effectContainer.appendChild(connection);
-                            
-                            gsap.to(connection, {
-                                width: '100%',
-                                x: 'random(-200, 200)',
-                                y: 'random(-200, 200)',
-                                rotation: 'random(-45, 45)',
-                                opacity: 0.5,
-                                duration: 2,
-                                delay: i * 0.1,
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'power1.inOut'
-                            });
-                        }
-                        break;
-
-                    case 11: // Hearts break and mend
-                        const numPieces = 20;
-                        for(let i = 0; i < numPieces; i++) {
-                            const piece = document.createElement('div');
-                            piece.className = 'particle';
-                            piece.style.background = '#ff4444';
-                            effectContainer.appendChild(piece);
-                            
-                            gsap.to(piece, {
-                                x: 'random(-300, 300)',
-                                y: 'random(-300, 300)',
-                                rotation: 'random(-180, 180)',
-                                scale: 'random(0.5, 2)',
-                                opacity: 'random(0.3, 0.7)',
-                                duration: 3,
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'power1.inOut'
-                            });
-                        }
-                        break;
-
-                    case 12: // Canvas of moments
-                        const numStrokes = 30;
-                        for(let i = 0; i < numStrokes; i++) {
-                            const stroke = document.createElement('div');
-                            stroke.className = 'paint-stroke';
-                            effectContainer.appendChild(stroke);
-                            
-                            gsap.to(stroke, {
-                                width: '200%',
-                                x: 'random(-200, 200)',
-                                y: 'random(-200, 200)',
-                                rotation: 'random(-45, 45)',
-                                opacity: 0.7,
-                                duration: 'random(2, 4)',
-                                delay: i * 0.1,
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'power2.inOut'
-                            });
-                        }
-                        break;
-
-                    case 13: // Hues of passion
-                        const colors = ['#ff6b6b', '#4ecdc4', '#a1c4fd', '#fbc2eb'];
-                        colors.forEach((color, i) => {
-                            const hue = document.createElement('div');
-                            hue.className = 'particle';
-                            hue.style.background = color;
-                            hue.style.mixBlendMode = 'overlay';
-                            effectContainer.appendChild(hue);
-                            
-                            gsap.to(hue, {
-                                x: 'random(-200, 200)',
-                                y: 'random(-200, 200)',
-                                scale: 'random(10, 20)',
-                                opacity: 0.3,
-                                duration: 'random(3, 5)',
-                                delay: i * 0.5,
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'sine.inOut'
-                            });
-                        });
-                        break;
-
-                    case 14: // Journey unfolding
-                        const paths = 15;
-                        for(let i = 0; i < paths; i++) {
-                            const path = document.createElement('div');
-                            path.className = 'paint-stroke';
-                            effectContainer.appendChild(path);
-                            
-                            gsap.from(path, {
-                                width: 0,
-                                x: -200,
-                                y: i * 30 - 200,
-                                opacity: 0.5,
-                                duration: 3,
-                                delay: i * 0.2,
-                                ease: 'power2.inOut',
-                                scrollTrigger: {
-                                    trigger: section,
-                                    start: "top center",
-                                    end: "bottom center",
-                                    scrub: 1
-                                }
-                            });
-                        }
-                        break;
-                }
+        });
+    </script>
+</body>
+</html>
