@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        .poem {
+            max-width: 600px;
+            font-size: 1.5rem;
+            line-height: 1.6;
+        }
+        .floating {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="poem">
+        <p>I want to do it neatly.</p>
+        <p>No mess, no fuss,<br>just gone—<br>like slipping out the back door<br>before anyone notices.</p>
+        <p>I think about it often,<br>how to fold myself away,<br>like a letter never sent,<br>like a note erased.</p>
+        <p>Not yet.<br>But soon, maybe.<br>And if I do,<br>I want to do it well.</p>
+    </div>
+    
+    <script>
+        function createFloatingElement(text) {
+            const element = document.createElement("div");
+            element.classList.add("floating");
+            element.textContent = text;
+            document.body.appendChild(element);
+            element.style.left = Math.random() * window.innerWidth + "px";
+            element.style.top = Math.random() * window.innerHeight + "px";
+            
+            gsap.to(element, {
+                duration: Math.random() * 5 + 3,
+                x: "random(-50, 50)",
+                y: "random(-50, 50)",
+                rotation: "random(-20, 20)",
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut"
+            });
+        }
