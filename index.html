@@ -1,961 +1,1466 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
+ 
     <meta charset="UTF-8">
+ 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sustainability Lending Library - University of Michigan</title>
+ 
+
+    <title>Neat</title>
+ 
+
+    <title>Spark</title>
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+ 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+ 
     <style>
-        :root {
-            --primary-color: #00274c;
-            --secondary-color: #ffcb05;
-            --accent-color: #6eb43f;
-            --light-gray: #f5f5f5;
-            --dark-gray: #333;
-            --medium-gray: #777;
-            --white: #fff;
-        }
-        
+ 
+
         * {
+ 
+
             margin: 0;
+ 
+
             padding: 0;
+ 
+
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+ 
+
         }
-        
+ 
+
+
+ 
         body {
-            background-color: var(--white);
-            color: var(--dark-gray);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* Header */
-        .header-notice {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            text-align: center;
-            padding: 10px;
-            font-weight: bold;
-        }
-        
-        header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 15px;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--white);
-            text-decoration: none;
-        }
-        
-        .logo-image {
-            height: 50px;
-            width: auto;
-            padding: 5px;
-            background-color: white;
-            border-radius: 4px;
-        }
-        
-        .logo-text {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .logo-text span {
-            color: var(--secondary-color);
-        }
-        
-        .header-links {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .header-links a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 15px;
-        }
-        
-        nav a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: bold;
-            margin-right: 20px;
-        }
-        
-        .button {
-            background-color: var(--accent-color);
+ 
+
+            background-color: #1a1a1a;
+ 
+
             color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
+ 
+
+            font-family: Arial, sans-serif;
+ 
+
+            background: #000;
+ 
+
+            color: #fff;
+ 
+
+            font-family: 'Times New Roman', serif;
+ 
+
+            overflow-x: hidden;
+ 
+
+            cursor: none;
+ 
+
         }
-        
-        .button:hover {
-            background-color: #5c9e35;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background-color: var(--light-gray);
-            padding: 60px 0;
-        }
-        
-        .hero h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .hero p {
-            margin-bottom: 20px;
-            max-width: 800px;
-            font-size: 18px;
-            color: var(--medium-gray);
-        }
-        
-        .search-box {
-            background-color: var(--white);
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 30px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-        }
-        
-        .search-box h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .search-input {
-            display: flex;
-            margin-bottom: 15px;
-            gap: 10px;
-        }
-        
-        .search-input input {
-            flex-grow: 1;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-        
-        .search-input input:focus {
-            border-color: var(--accent-color);
-            outline: none;
-        }
-        
-        /* Important Notice */
-        .important-notice {
-            background-color: #f8f9fa;
-            border-left: 5px solid var(--accent-color);
-            padding: 25px;
-            margin: 40px 0;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .important-notice h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-        
-        .important-notice ul {
-            list-style-type: none;
-            margin-left: 0;
-        }
-        
-        .important-notice ul li {
-            margin-bottom: 12px;
+ 
+
+
+ 
+
+        .container {
+ 
+
+            min-height: 500vh;
+ 
+
             position: relative;
-            padding-left: 25px;
-            color: var(--medium-gray);
+ 
+
         }
-        
-        .important-notice ul li:before {
-            content: "•";
+ 
+
+
+ 
+
+        .title-container {
+ 
+
+            position: fixed;
+ 
+
+            top: 10%;
+ 
+
+            left: 50%;
+ 
+
+            transform: translateX(-50%);
+ 
+
+            z-index: 100;
+ 
+
+            mix-blend-mode: difference;
+ 
+
+        }
+ 
+
+
+ 
+
+        .title {
+ 
+
+            font-size: 4rem;
+ 
+
+            opacity: 0;
+ 
+
+            letter-spacing: 1rem;
+ 
+
+        }
+ 
+
+
+ 
+
+        .poem {
+ 
+
             position: absolute;
-            left: 0;
-            color: var(--accent-color);
-            font-size: 20px;
+ 
+
+            top: 0;
+ 
+
+            left: 50%;
+ 
+
+            transform: translateX(-50%);
+ 
+
+            max-width: 800px;
+ 
+
+            padding: 2rem;
+ 
+
+            padding-top: 40vh;
+ 
+
         }
-        
-        .important-notice strong {
-            color: var(--primary-color);
-        }
-        
-        /* Categories Grid */
-        .categories-section {
-            padding: 60px 0;
-        }
-        
-        .section-header {
+ 
+
+
+ 
+
+        .line {
+ 
+
+            opacity: 0;
+ 
+
+            transform: translateY(20px);
+ 
+
+            margin-bottom: 35vh;
+ 
+
+            font-size: 1.8rem;
+ 
+
+            line-height: 1.6;
+ 
+
+            position: relative;
+ 
+
             text-align: center;
-            margin-bottom: 40px;
+ 
+
         }
-        
-        .section-title {
-            font-size: 32px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
+ 
+
+
+ 
+
+        .cursor {
+ 
+
+            width: 20px;
+ 
+
+            height: 20px;
+ 
+
+            border: 2px solid #fff;
+ 
+
+            border-radius: 50%;
+ 
+
+            position: fixed;
+ 
+
+            pointer-events: none;
+ 
+
+            transition: transform 0.2s ease;
+ 
+
+            z-index: 1000;
+ 
+
         }
-        
-        .section-desc {
-            color: var(--medium-gray);
-            max-width: 700px;
-            margin: 0 auto;
+ 
+
+
+ 
+
+        .spark {
+ 
+
+            position: fixed;
+ 
+
+            width: 4px;
+ 
+
+            height: 4px;
+ 
+
+            background: #fff;
+ 
+
+            border-radius: 50%;
+ 
+
+            pointer-events: none;
+ 
+
+            opacity: 0;
+ 
+
         }
-        
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
+ 
+
+
+ 
+
+        .what-if {
+ 
+
+            font-style: italic;
+ 
+
+            font-size: 2.5rem;
+ 
+
         }
-        
-        .category-card {
-            background-color: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .category-image {
-            height: 200px;
-            background-color: var(--light-gray);
+ 
+
+
+ 
+
+        .what-if-container {
+ 
+
+            height: 50vh;
+ 
             display: flex;
-            align-items: center;
+ 
             justify-content: center;
-            overflow: hidden;
-        }
-        
-        .category-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 20px;
-        }
-        
-        .category-content {
-            padding: 25px;
-        }
-        
-        .category-title {
-            font-size: 22px;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-        
-        .category-desc {
-            color: var(--medium-gray);
-            line-height: 1.5;
-        }
-        
-        /* How It Works */
-        .how-it-works {
-            background-color: var(--accent-color);
-            color: var(--white);
-            padding: 60px 0;
-        }
-        
-        .how-it-works .section-title {
-            color: var(--white);
-        }
-        
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .step-card {
-            background-color: rgba(255,255,255,0.95);
-            padding: 30px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .step-number {
-            font-size: 36px;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin-bottom: 15px;
-        }
-        
-        .step-title {
-            font-size: 20px;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .step-desc {
-            color: var(--medium-gray);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 60px 0 20px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-column h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: var(--secondary-color);
-        }
-        
-        .footer-column ul {
-            list-style: none;
-        }
-        
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
-        
-        .footer-column a {
-            color: var(--white);
-            text-decoration: none;
-        }
-        
-.newsletter {
-    background-color: rgba(255,255,255,0.1);
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.newsletter h3 {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.newsletter p {
-    margin-bottom: 15px;
-    font-size: 14px;
-    line-height: 1.4;
-}
-        
-        .newsletter-form {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .newsletter-form input {
-            flex-grow: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-        }
-        
-        .newsletter-form button {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .pbsl-logo {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 20px;
-        }
-        
-        .university-footer {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 20px 0;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            font-size: 14px;
-        }
-        
-        .university-footer p {
-            margin-bottom: 8px;
-        }
-        
-        .university-footer a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-
-        /* Admin Corner - very discrete */
-        .admin-corner {
-            font-size: 12px;
-            opacity: 0.7;
-            color: var(--white);
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .admin-corner a {
-            color: var(--white);
-            text-decoration: none;
-        }
-
-        .admin-corner a:hover {
-            text-decoration: underline;
-        }
-
-        /* Inventory Display Section */
-        .inventory-section {
-            padding: 50px 0;
-            background-color: var(--light-gray);
-        }
-
-        .inventory-container {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-top: 30px;
-        }
-
-        .inventory-header {
-            display: flex;
-            justify-content: space-between;
+ 
             align-items: center;
-            margin-bottom: 20px;
-        }
+ 
 
-        .inventory-header h2 {
-            color: var(--primary-color);
-            font-size: 24px;
-        }
+            height: 100vh;
+ 
 
-        .inventory-table {
+            text-align: center;
+ 
+
+            padding: 20px;
+ 
+        }
+ 
+
+        .poem {
+ 
+
+            max-width: 600px;
+ 
+
+            font-size: 1.5rem;
+ 
+
+            line-height: 1.6;
+ 
+
+
+ 
+
+        .ripple {
+ 
+
+            position: absolute;
+ 
+
+            border: 2px solid #fff;
+ 
+
+            border-radius: 50%;
+ 
+
+            pointer-events: none;
+ 
+
+            opacity: 0;
+ 
+        }
+ 
+
+        .floating {
+ 
+
+
+ 
+
+        .wanting-effect {
+ 
+            position: absolute;
+ 
+
+            font-size: 1.2rem;
+ 
+
+            opacity: 0.7;
+ 
+
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+ 
 
-        .inventory-table th {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 12px;
-            text-align: left;
-        }
+            height: 2px;
+ 
 
-        .inventory-table td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
+            background: #fff;
+ 
 
-        .inventory-table tr:nth-child(even) {
-            background-color: var(--light-gray);
-        }
+            transform: scaleX(0);
+ 
 
-        .inventory-table tr:hover {
-            background-color: rgba(110, 180, 63, 0.1);
-        }
+            transform-origin: left;
+ 
 
-        .status-available {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
+            bottom: -10px;
+ 
 
-        .status-unavailable {
-            color: #d9534f;
-            font-weight: bold;
-        }
+            left: 0;
+ 
 
-        /* Refresh button */
-        .refresh-btn {
-            background-color: var(--primary-color);
-            color: var(--white);
+        }
+ 
+
+
+ 
+
+        .hands-reach {
+ 
+
+            position: relative;
+ 
+
+            overflow: hidden;
+ 
+
+        }
+ 
+
+
+ 
+
+        .next-nav {
+ 
+
+            position: fixed;
+ 
+
+            bottom: 40px;
+ 
+
+            right: 40px;
+ 
+
+            z-index: 100;
+ 
+
+            opacity: 0;
+ 
+
+            transform: translateY(20px);
+ 
+
+            pointer-events: none;
+ 
+
+            transition: opacity 0.5s ease, transform 0.5s ease;
+ 
+        }
+ 
+
+
+ 
+
+        .next-nav.visible {
+ 
+
+            opacity: 1;
+ 
+
+            transform: translateY(0);
+ 
+
+            pointer-events: all;
+ 
+
+        }
+ 
+
+
+ 
+
+        .next-button {
+ 
+
+            background: transparent;
+ 
+
             border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
+ 
+
+            color: #fff;
+ 
+
+            font-size: 1rem;
+ 
+
             cursor: pointer;
-            font-size: 14px;
+ 
+
+            position: relative;
+ 
+
+            padding: 10px;
+ 
+
+            display: flex;
+ 
+
+            align-items: center;
+ 
+
+            gap: 10px;
+ 
+
+            text-decoration: none;
+ 
+
         }
+ 
 
-        .refresh-btn:hover {
-            background-color: #001a33;
+
+ 
+
+        .next-button::after {
+ 
+
+            content: '';
+ 
+
+            position: absolute;
+ 
+
+            bottom: 0;
+ 
+
+            left: 0;
+ 
+
+            width: 0;
+ 
+
+            height: 1px;
+ 
+
+            background: #fff;
+ 
+
+            transition: width 0.3s ease;
+ 
+
         }
-        
-        @media (max-width: 768px) {
-            .header-top, nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .header-links, nav {
-                margin-top: 15px;
-                gap: 15px;
-            }
-            
-            nav a {
-                margin-bottom: 10px;
-                display: block;
-            }
-            
-            .hero {
-                padding: 40px 0;
-            }
-            
-            .hero h1 {
-                font-size: 28px;
-            }
-            
-            .search-input {
-                flex-direction: column;
-            }
-            
-            .search-input input, 
-            .search-input button {
-                width: 100%;
-                border-radius: 4px;
-            }
-            
-            .newsletter-form {
-                flex-direction: column;
-            }
-            
-            .newsletter-form input, 
-            .newsletter-form button {
-                width: 100%;
-            }
+ 
 
-            .inventory-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
 
-            .inventory-header button {
-                margin-top: 10px;
-            }
+ 
 
-            .inventory-table {
-                font-size: 14px;
-            }
+        .next-button:hover::after {
+ 
+
+            width: 100%;
+ 
+
         }
+ 
+
+
+ 
+
+        .next-button .arrow {
+ 
+
+            position: relative;
+ 
+
+            width: 20px;
+ 
+
+            height: 20px;
+ 
+
+            transition: transform 0.3s ease;
+ 
+
+        }
+ 
+
+
+ 
+
+        .next-button:hover .arrow {
+ 
+
+            transform: translateX(5px);
+ 
+
+        }
+ 
+
+
+ 
+
+        .next-button .arrow::before,
+ 
+
+        .next-button .arrow::after {
+ 
+
+            content: '';
+ 
+
+            position: absolute;
+ 
+
+            background: #fff;
+ 
+
+            transition: all 0.3s ease;
+ 
+
+        }
+ 
+
+
+ 
+
+        .next-button .arrow::before {
+ 
+
+            width: 12px;
+ 
+
+            height: 1px;
+ 
+
+            top: 50%;
+ 
+
+            right: 0;
+ 
+
+            transform: translateY(-50%);
+ 
+
+        }
+ 
+
+
+ 
+
+        .next-button .arrow::after {
+ 
+
+            width: 6px;
+ 
+
+            height: 1px;
+ 
+
+            top: 50%;
+ 
+
+            right: 0;
+ 
+
+            transform: rotate(45deg) translateY(-50%);
+ 
+
+        }
+ 
+
+
+ 
+
+        .progress-bar {
+ 
+
+            position: fixed;
+ 
+
+            bottom: 0;
+ 
+
+            left: 0;
+ 
+
+            width: 100%;
+ 
+
+            height: 1px;
+ 
+
+            background: rgba(255, 255, 255, 0.1);
+ 
+
+            z-index: 100;
+ 
+
+        }
+ 
+
+
+ 
+
+        .progress-indicator {
+ 
+
+            position: absolute;
+ 
+
+            top: 0;
+ 
+
+            left: 0;
+ 
+
+            height: 100%;
+ 
+
+            width: 0;
+ 
+
+            background: #fff;
+ 
+
+        }
+ 
+
+
+ 
+
+        .transition-overlay {
+ 
+
+            position: fixed;
+ 
+
+            top: 0;
+ 
+
+            left: 0;
+ 
+
+            width: 100%;
+ 
+
+            height: 100%;
+ 
+
+            background: #000;
+ 
+
+            transform: scaleY(0);
+ 
+
+            transform-origin: bottom;
+ 
+
+            z-index: 1000;
+ 
+
+        }
+ 
+
+
+ 
     </style>
+ 
 </head>
+ 
 <body>
-    <!-- Header Notice -->
-    <div class="header-notice">
-        ATTENTION: Equipment requests must be submitted at least 5 business days before the desired rental date
-    </div>
-    
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-top">
-                <a href="index.html" class="logo">
-                    <img src="assets/ll.png" alt="Sustainability Lending Library" class="logo-image">
-                    <div class="logo-text">Sustainability <span>Lending Library</span></div>
-                </a>
-                <div class="header-links">
-                    <a href="locations.html">Locations</a>
-                    <a href="get-involved.html">Get Involved</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="faq.html">FAQ</a>
-                </div>
-            </div>
-            <nav>
-                <div>
-                    <a href="equipment.html">Equipment</a>
-                    <a href="how-it-works.html">How It Works</a>
-                    <a href="request-form.html">Request Form</a>
-                    <a href="https://calendar.google.com/calendar/u/0?cid=Y180MmVmZjAzYzBiY2ViMDEzYTNhNzU5NGRjOGUxMjk1N2UxYzdmZjQyN2RkZTc1YmJhZTI0YzE0YmM4ODEwZDM4QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20" target="_blank">Calendar</a>
-                </div>
-                <div>
-                    <a href="request-form.html" class="button">Request Items</a>
-                </div>
-            </nav>
-        </div>
-    </header>
-    
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>Welcome to Our Resource Sharing Hub</h1>
-            <p>Part of the Planet Blue Student Leaders' eco-repping initiative at the University of Michigan's Ann Arbor campus, we provide common use equipment and materials for individual students and student groups.</p>
-            <p>Our mission is to cut down on excess waste, purchasing and consumption while creating a community space for the social practice of borrowing and sharing to take place.</p>
-            
-            <div class="search-box">
-                <h2>Find Available Equipment</h2>
-                <div class="search-input">
-                    <input type="text" id="search-inventory" placeholder="Search our equipment catalog...">
-                    <button class="button" onclick="searchEquipment()">Search</button>
-                </div>
-                <p>Looking for something specific? Browse our equipment categories below or check the availability calendar.</p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Important Notice -->
-    <section class="section">
-        <div class="container">
-            <div class="important-notice">
-                <h3>IMPORTANT: Please Read Before Requesting Items</h3>
-                <ul>
-                    <li>Equipment requests must be submitted <strong>at least 5 business days (M-F, 9am-5pm)</strong> before the start of the desired rental date(s).</li>
-                    <li>Screen printing requests must be submitted <strong>at least 10 business days (M-F, 9am-5pm)</strong> before the start of the desired rental date(s).</li>
-                    <li>You are not guaranteed your desired rentals by filling out the request form. The Student Life Sustainability reserves the right to deny a request on an individual basis.</li>
-                    <li>Rentals are on a "First Come, First Serve" basis and a reservation submitted before yours holds priority.</li>
-                    <li>Check out each item's availability using our <a href="https://calendar.google.com/calendar/u/0?cid=Y180MmVmZjAzYzBiY2ViMDEzYTNhNzU5NGRjOGUxMjk1N2UxYzdmZjQyN2RkZTc1YmJhZTI0YzE0YmM4ODEwZDM4QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20" target="_blank">Google Calendar</a>.</li>
-                    <li>If any equipment is not returned or returned broken/damaged, <strong>your group/organization's shortcode will be charged with the cost of fixture or replacement</strong>.</li>
-                </ul>
-                <p>Once your request form is submitted, a staff member from Student Life Sustainability will reach out with next steps on how and where to pick up materials.</p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Live Inventory Section -->
-    <section class="inventory-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Live Equipment Availability</h2>
-                <p class="section-desc">Check the current availability status of our equipment in real-time</p>
-            </div>
-            
-            <div class="inventory-container">
-                <div class="inventory-header">
-                    <h2>Current Inventory Status</h2>
-                    <button class="refresh-btn" onclick="loadInventory()">Refresh Data</button>
-                </div>
-                
-                <div id="inventory-display">
-                    <table class="inventory-table">
-                        <thead>
-                            <tr>
-                                <th>Item Name</th>
-                                <th>Category</th>
-                                <th>Total Quantity</th>
-                                <th>Available</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventory-table-body">
-                            <!-- This will be populated by JavaScript from Google Sheets -->
-                            <tr>
-                                <td colspan="5" style="text-align: center;">Loading inventory data...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Categories Section -->
-    <section class="categories-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Browse Equipment Categories</h2>
-                <p class="section-desc">Explore our wide range of available equipment for your sustainable events and initiatives</p>
-            </div>
-            
-            <div class="categories-grid">
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="assets/6ft folding table.png" alt="Event Supplies">
-                    </div>
-                    <div class="category-content">
-                        <h3 class="category-title">Event Supplies</h3>
-                        <p class="category-desc">Tables, tents, chairs, and other equipment for sustainable events</p>
-                    </div>
-                </div>
-                
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="assets/bluetooth speaker.png" alt="Technology">
-                    </div>
-                    <div class="category-content">
-                        <h3 class="category-title">Technology</h3>
-                        <p class="category-desc">Speakers, projectors, cables, and other tech equipment</p>
-                    </div>
-                </div>
-                
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="assets/screen printing.jpeg" alt="Craft Supplies">
-                    </div>
-                    <div class="category-content">
-                        <h3 class="category-title">Craft Supplies</h3>
-                        <p class="category-desc">Screen printing, button makers, and other creative tools</p>
-                    </div>
-                </div>
-                
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="assets/outlet kilowatt meter.png" alt="Sustainability Tools">
-                    </div>
-                    <div class="category-content">
-                        <h3 class="category-title">Sustainability Tools</h3>
-                        <p class="category-desc">Energy meters, waste sorting equipment, and educational tools</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- How It Works -->
-    <section class="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">How the Lending Library Works</h2>
-                <p class="section-desc">Follow these simple steps to borrow equipment from our Sustainability Lending Library</p>
-            </div>
-            
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3 class="step-title">Check Availability</h3>
-                    <p class="step-desc">Browse our equipment list and check availability on our Google Calendar</p>
-                </div>
-                
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3 class="step-title">Submit Request Form</h3>
-                    <p class="step-desc">Fill out the online request form at least 5 business days before your event</p>
-                </div>
-                
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3 class="step-title">Get Confirmation</h3>
-                    <p class="step-desc">A staff member will confirm your request and provide pickup details</p>
-                </div>
-                
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <h3 class="step-title">Return Equipment</h3>
-                    <p class="step-desc">Return items in the same condition you received them by the agreed date</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>About</h3>
-                    <ul>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="about.html#mission">Our Mission</a></li>
-                        <li><a href="about.html#impact">Impact</a></li>
-                        <li><a href="about.html#team">Team</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><a href="equipment.html">Equipment Catalog</a></li>
-                        <li><a href="how-it-works.html">How to Borrow</a></li>
-                        <li><a href="faq.html">FAQs</a></li>
-                        <li><a href="policies.html">Policies</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact</h3>
-                    <ul>
-                        <li><a href="mailto:planetbluestudentleader@umich.edu">Email Us</a></li>
-                        <li><a href="request-form.html">Request Form</a></li>
-                        <li><a href="locations.html">Visit Us</a></li>
-                        <li><a href="feedback.html">Feedback</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Stay Connected</h3>
-                    <div class="newsletter">
-                        <h3>Join Our Newsletter</h3>
-                        <p>Get updates about new equipment, events, and sustainability tips.</p>
-                        <form action="https://formsubmit.co/aminseo@umich.edu" method="POST" class="newsletter-form">
-                            <input type="email" name="email" placeholder="Your Email" required>
-                            <input type="hidden" name="_subject" value="Newsletter Signup">
-                            <button type="submit">Join</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <img src="assets/pbsl logo.png" alt="Planet Blue Student Leaders" class="pbsl-logo">
-                <p>The Sustainability Lending Library is an initiative of the Planet Blue Student Leaders</p>
-                <!-- Very discrete link to inventory management system -->
-                <div class="admin-corner">
-                    <a href="inventorymanagentsystem.html" title="Staff Access Only">Staff Portal</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-    
-    <!-- University Footer -->
-    <div class="university-footer">
-        <div class="container">
-            <p>University of Michigan</p>
-            <p>500 S. State St. Ann Arbor, MI 48109 USA</p>
-            <p>(734) 764-1817 | <a href="mailto:planetblue@umich.edu">planetblue@umich.edu</a></p>
-            <p>&copy; 2025 Planet Blue Student Leaders</p>
-            <p>Site produced for conceptual purposes</p>
-        </div>
-    </div>
+ 
 
-    <!-- Google Sheets Integration Script -->
+    <div class="poem">
+ 
+
+        <p>I want to do it neatly.</p>
+ 
+
+        <p>No mess, no fuss,<br>just gone—<br>like slipping out the back door<br>before anyone notices.</p>
+ 
+
+        <p>I think about it often,<br>how to fold myself away,<br>like a letter never sent,<br>like a note erased.</p>
+ 
+
+        <p>Not yet.<br>But soon, maybe.<br>And if I do,<br>I want to do it well.</p>
+ 
+
+    <div class="cursor"></div>
+ 
+
+    <div class="transition-overlay"></div>
+ 
+
+    <div class="container">
+ 
+
+        <div class="title-container">
+ 
+
+            <h1 class="title">SPARK</h1>
+ 
+
+        </div>
+ 
+
+        <div class="poem">
+ 
+
+            <div class="line">Before breath, before flesh,</div>
+ 
+
+            <div class="line">
+ 
+
+                there is wanting—
+ 
+
+                <div class="wanting-effect"></div>
+ 
+
+            </div>
+ 
+
+            <div class="line">a longing so deep it hums in the bones,</div>
+ 
+
+            <div class="line">a hunger to shape the unseen</div>
+ 
+
+            <div class="line">into something real.</div>
+ 
+
+            <div class="line hands-reach">Hands reach,</div>
+ 
+
+            <div class="line">eyes meet,</div>
+ 
+
+            <div class="line">a whisper in the dark:</div>
+ 
+
+            <div class="line what-if-container">
+ 
+
+                <div class="what-if">what if?</div>
+ 
+
+            </div>
+ 
+
+            <div class="line">A dream pressed into skin,</div>
+ 
+
+            <div class="line">a wish that takes root,</div>
+ 
+
+            <div class="line">small as a sigh,</div>
+ 
+
+            <div class="line">bright as the thought</div>
+ 
+
+            <div class="line">of what could be.</div>
+ 
+
+        </div>
+ 
+    </div>
+ 
+
+    
+ 
+
+
+ 
+
+    <div class="progress-bar">
+ 
+
+        <div class="progress-indicator"></div>
+ 
+
+    </div>
+ 
+
+    <nav class="next-nav">
+ 
+
+        <a href="anticipation.html" class="next-button">
+ 
+
+            anticipation
+ 
+
+            <span class="arrow"></span>
+ 
+
+        </a>
+ 
+
+    </nav>
+ 
+
+
+ 
     <script>
-        // Google Sheets Integration
-        const SHEET_ID = '1YzxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxK4';  // Replace with your actual Google Sheet ID
-        const API_KEY = 'AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxY';     // Replace with your actual API Key
-        const SHEET_NAME = 'Inventory';
-        
-        // Load inventory data on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadInventory();
-        });
-        
-        // Function to load inventory data from Google Sheets
-        function loadInventory() {
-            const tableBody = document.getElementById('inventory-table-body');
-            tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Loading inventory data...</td></tr>';
-            
-            // Fetch data from Google Sheets API
-            const sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
-            
-            fetch(sheetUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    displayInventory(data.values);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading inventory data. Please try again later.</td></tr>';
-                });
-        }
-        
-        // Function to display inventory data in the table
-        function displayInventory(data) {
-            if (!data || data.length < 2) {
-                document.getElementById('inventory-table-body').innerHTML = '<tr><td colspan="5" style="text-align: center;">No inventory data available.</td></tr>';
-                return;
-            }
-            
-            const tableBody = document.getElementById('inventory-table-body');
-            tableBody.innerHTML = '';
-            
-            // Skip header row (index 0)
-            for (let i = 1; i < data.length; i++) {
-                const row = data[i];
-                if (row.length < 5) continue; // Skip incomplete rows
-                
-                const itemName = row[0] || 'N/A';
-                const category = row[1] || 'N/A';
-                const totalQuantity = row[2] || '0';
-                const available = row[3] || '0';
-                const isAvailable = parseInt(available) > 0;
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${itemName}</td>
-                    <td>${category}</td>
-                    <td>${totalQuantity}</td>
-                    <td>${available}</td>
-                    <td class="${isAvailable ? 'status-available' : 'status-unavailable'}">${isAvailable ? 'Available' : 'Unavailable'}</td>
-                `;
-                tableBody.appendChild(tr);
-            }
-        }
-        
-        // Function to search equipment in the inventory
-        function searchEquipment() {
-            const searchTerm = document.getElementById('search-inventory').value.toLowerCase();
-            const rows = document.querySelectorAll('#inventory-table-body tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-            
-            // If no visible rows after filtering, show message
-            let visibleRows = 0;
-            rows.forEach(row => {
-                if (row.style.display !== 'none') {
-                    visibleRows++;
-                }
-            });
-            
-            if (visibleRows === 0) {
-                document.getElementById('inventory-table-body').innerHTML += `
-                    <tr id="no-results-row">
-                        <td colspan="5" style="text-align: center;">No items match your search.</td>
-                    </tr>
-                `;
-            } else {
-                const noResultsRow = document.getElementById('no-results-row');
-                if (noResultsRow) noResultsRow.remove();
-            }
-        }
+ 
 
-        // Add event listener for the search input to search on Enter key press
-        document.getElementById('search-inventory').addEventListener('keyup', function(event) {
-            if (event.key === 'Enter') {
-                searchEquipment();
-            }
+        function createFloatingElement(text) {
+ 
+
+            const element = document.createElement("div");
+ 
+
+            element.classList.add("floating");
+ 
+
+            element.textContent = text;
+ 
+
+            document.body.appendChild(element);
+ 
+
+            element.style.left = Math.random() * window.innerWidth + "px";
+ 
+
+            element.style.top = Math.random() * window.innerHeight + "px";
+ 
+
+        gsap.registerPlugin(ScrollTrigger);
+ 
+
+
+ 
+
+        // Custom cursor
+ 
+
+        const cursor = document.querySelector('.cursor');
+ 
+
+        document.addEventListener('mousemove', (e) => {
+ 
+
+            cursor.style.left = e.clientX + 'px';
+ 
+
+            cursor.style.top = e.clientY + 'px';
+ 
+
         });
+ 
+
+
+ 
+
+        // Title animation and fade out on scroll
+ 
+
+        gsap.to('.title', {
+ 
+
+            duration: 2,
+ 
+
+            opacity: 1,
+ 
+
+            ease: "power2.out"
+ 
+
+        });
+ 
+
+
+ 
+
+        gsap.to('.title-container', {
+ 
+
+            scrollTrigger: {
+ 
+
+                trigger: '.container',
+ 
+
+                start: "top top",
+ 
+
+                end: "20% top",
+ 
+
+                scrub: true
+ 
+
+            },
+ 
+
+            opacity: 0.2,
+ 
+
+            scale: 0.8,
+ 
+
+            y: -50
+ 
+
+        });
+ 
+
+
+ 
+
+        // Line-by-line reveal animations with specific effects
+ 
+
+        const lines = document.querySelectorAll('.line');
+ 
+
+        lines.forEach((line, index) => {
+ 
+
+            const baseAnimation = {
+ 
+
+                scrollTrigger: {
+ 
+
+                    trigger: line,
+ 
+
+                    start: "top center",
+ 
+
+                    end: "bottom center",
+ 
+
+                    scrub: 1,
+ 
+
+                },
+ 
+
+                opacity: 1,
+ 
+
+                y: 0,
+ 
+
+                duration: 1,
+ 
+
+                ease: "power2.out"
+ 
+
+            };
+ 
+
+
+ 
+
+            gsap.to(line, baseAnimation);
+ 
+
+
+ 
+
+            // Special effects for specific lines
+ 
+
+            if (line.textContent.includes('wanting')) {
+ 
+
+                gsap.to(line.querySelector('.wanting-effect'), {
+ 
+
+                    scrollTrigger: {
+ 
+
+                        trigger: line,
+ 
+
+                        start: "top center",
+ 
+
+                        end: "bottom center",
+ 
+
+                        scrub: 1,
+ 
+
+                    },
+ 
+
+                    scaleX: 1,
+ 
+
+                    duration: 1,
+ 
+
+                    ease: "power2.inOut"
+ 
+
+                });
+ 
+
+            }
+ 
+
+
+ 
+
+            if (line.classList.contains('hands-reach')) {
+ 
+
+                gsap.to(line, {
+ 
+
+                    scrollTrigger: {
+ 
+
+                        trigger: line,
+ 
+
+                        start: "top center",
+ 
+
+                        end: "bottom center",
+ 
+
+                        scrub: 1,
+ 
+
+                    },
+ 
+
+                    x: 50,
+ 
+
+                    duration: 1,
+ 
+
+                    ease: "power2.inOut"
+ 
+
+                });
+ 
+
+            }
+ 
+
+
+ 
+
+            if (line.querySelector('.what-if')) {
+ 
+
+                // Create ripple effect
+ 
+
+                function createRipple() {
+ 
+
+                    const ripple = document.createElement('div');
+ 
+
+                    ripple.className = 'ripple';
+ 
+
+                    line.appendChild(ripple);
+ 
+
+
+ 
+
+                    gsap.set(ripple, {
+ 
+
+                        left: '50%',
+ 
+
+                        top: '50%',
+ 
+
+                        width: 0,
+ 
+
+                        height: 0,
+ 
+
+                        opacity: 1
+ 
+
+                    });
+ 
+
+
+ 
+
+                    gsap.to(ripple, {
+ 
+
+                        width: 200,
+ 
+
+                        height: 200,
+ 
+
+                        opacity: 0,
+ 
+
+                        duration: 2,
+ 
+
+                        ease: "power2.out",
+ 
+
+                        x: -100,
+ 
+
+                        y: -100,
+ 
+
+                        onComplete: () => ripple.remove()
+ 
+
+                    });
+ 
+
+                }
+ 
+
+
+ 
+
+                ScrollTrigger.create({
+ 
+
+                    trigger: line,
+ 
+
+                    start: "top center",
+ 
+
+                    end: "bottom center",
+ 
+
+                    onEnter: () => {
+ 
+
+                        setInterval(createRipple, 2000);
+ 
+
+                    }
+ 
+
+                });
+ 
+
+            }
+ 
+
+        });
+ 
+
+
+ 
+
+        // Progress bar and next button reveal
+ 
+
+        const progressIndicator = document.querySelector('.progress-indicator');
+ 
+
+        const nextNav = document.querySelector('.next-nav');
+ 
+
+        
+ 
+
+        ScrollTrigger.create({
+ 
+
+            trigger: '.container',
+ 
+
+            start: 'top top',
+ 
+
+            end: 'bottom bottom',
+ 
+
+            onUpdate: (self) => {
+ 
+
+                gsap.to(progressIndicator, {
+ 
+
+                    width: `${self.progress * 100}%`,
+ 
+
+                    duration: 0.1,
+ 
+
+                    ease: 'none'
+ 
+
+                });
+ 
+
+                
+ 
+
+                // Show next button when near the end
+ 
+
+                if (self.progress > 0.95) {
+ 
+
+                    nextNav.classList.add('visible');
+ 
+
+                } else {
+ 
+
+                    nextNav.classList.remove('visible');
+ 
+
+                }
+ 
+
+            }
+ 
+
+        });
+ 
+
+
+ 
+
+        // Next button transition
+ 
+
+        document.querySelector('.next-button').addEventListener('click', (e) => {
+ 
+
+            e.preventDefault();
+ 
+
+            const href = e.target.closest('a').getAttribute('href');
+ 
+
+ 
+
+            gsap.to(element, {
+ 
+
+                duration: Math.random() * 5 + 3,
+ 
+
+                x: "random(-50, 50)",
+ 
+
+                y: "random(-50, 50)",
+ 
+
+                rotation: "random(-20, 20)",
+ 
+
+                repeat: -1,
+ 
+
+                yoyo: true,
+ 
+
+                ease: "power1.inOut"
+ 
+
+            gsap.to('.transition-overlay', {
+ 
+
+                scaleY: 1,
+ 
+
+                duration: 1,
+ 
+
+                ease: "power2.inOut",
+ 
+
+                onComplete: () => {
+ 
+
+                    window.location.href = href;
+ 
+
+                }
+ 
+
+            });
+ 
+
+        });
+ 
+
+
+ 
+
+        // Spark creation
+ 
+
+        function createSpark(x, y) {
+ 
+
+            const spark = document.createElement('div');
+ 
+
+            spark.className = 'spark';
+ 
+
+            spark.style.left = x + 'px';
+ 
+
+            spark.style.top = y + 'px';
+ 
+
+            document.body.appendChild(spark);
+ 
+
+
+ 
+
+            gsap.to(spark, {
+ 
+
+                duration: Math.random() * 2 + 1,
+ 
+
+                x: (Math.random() - 0.5) * 100,
+ 
+
+                y: (Math.random() - 0.5) * 100,
+ 
+
+                opacity: 1,
+ 
+
+                scale: Math.random() * 3,
+ 
+
+                ease: "power2.out",
+ 
+
+                onComplete: () => {
+ 
+
+                    gsap.to(spark, {
+ 
+
+                        duration: 0.5,
+ 
+
+                        opacity: 0,
+ 
+
+                        onComplete: () => spark.remove()
+ 
+
+                    });
+ 
+
+                }
+ 
+            });
+ 
+        }
+ 
+
+
+ 
+
+        // Mouse trail effect
+ 
+
+        let timeout;
+ 
+
+        document.addEventListener('mousemove', (e) => {
+ 
+
+            clearTimeout(timeout);
+ 
+
+            timeout = setTimeout(() => {
+ 
+
+                createSpark(e.clientX, e.clientY);
+ 
+
+            }, 50);
+ 
+
+        });
+ 
+
+    </script>
+ 
+
+</body>
+ 
+
+</html>
